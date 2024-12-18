@@ -59,7 +59,10 @@ void hardwereSetup() {
 
 void setup() {
   hardwereSetup();
+  delay(3000);
+  Serial.print("has started");
   wifiSetup();
+  Serial.println("Test");
 }
 
 void loop() {
