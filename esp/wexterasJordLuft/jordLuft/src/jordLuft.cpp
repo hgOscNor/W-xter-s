@@ -200,8 +200,8 @@ void hardwereSetup() {
 }
 
 void softwereSetup() {
-  // wifiSetup();
-  // timeSetup();
+  wifiSetup();
+  timeSetup();
 }
 
 void setup() {
@@ -210,6 +210,7 @@ void setup() {
 }
 
 void loop() {
+  digitalWrite(LED_BUILTIN, LOW);
   if(triggerEarthInterupt(earthArray[0], earthInteruptAt)) {
     firebaseUpload(DataType::earth);
   }
@@ -219,5 +220,6 @@ void loop() {
   if(triggerTempInterupt(tempArray[0], tempInteruptAt)) {
     firebaseUpload(DataType::temp);
   }
+  digitalWrite(LED_BUILTIN, HIGH);
   delay(10);
 }
