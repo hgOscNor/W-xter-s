@@ -25,42 +25,156 @@
 #include <NTPClient.h>
 #include <Wire.h>
 #include <AM2320.h>
+#include <WiFiUdp.h>
+
 
 Firebase fb(REFERENCE_URL, AUTH_TOKEN);
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP);
+AM2320 airSensor;
 
 const int earthSensorPin = 0;
+const int numberOfValuesInAvrege = 3;
+const int earthInteruptAt = 2;
+const int humInteruptAt = 5;
+const int tempInteruptAt = 2;
 
-void firebase();
-void wifiSetup();
-void hardwereSetup();
-int readEarthSensor();
+int earthArray[numberOfValuesInAvrege];
+int humArray[numberOfValuesInAvrege];
+int tempArray[numberOfValuesInAvrege];
 
-void setup() {
-  hardwereSetup();
-  delay(3000);
-  Serial.print("has started");
-  wifiSetup();
-  Serial.println("Test");
+enum class DataType {
+  earth,
+  hum,
+  temp,
+};
+
+int getTemp() {
+  if(airSensor.measure()) {
+    return airSensor.getTemperature();
+  }
+  else {
+    switch (airSensor.getErrorCode()) {
+    case 1:
+      Serial.println("ERR: Sensor is offline");
+      break;
+    case 2:
+      Serial.println("ERR: CRC validation failed");
+      break;
+    }
+  }
+  return 0;
 }
 
-void loop() {
-  readEarthSensor();
-  delay(1000);
+int getHum() {
+  if(airSensor.measure()) {
+    return airSensor.getHumidity();
+  }
+  else {
+    switch (airSensor.getErrorCode()) {
+    case 1:
+      Serial.println("ERR: Sensor is offline");
+      break;
+    case 2:
+      Serial.println("ERR: CRC validaion failed");
+      break;
+    }
+  }
+  return 0;
+}
+
+void timeSetup() {
+  timeClient.begin();
+  timeClient.setTimeOffset(3600);
+}
+
+void updateTime() {
+  while(!timeClient.update()) {
+    timeClient.forceUpdate();
+  }
+}
+
+int calculateAverage(const int numberOfValues, const int Values[]) {
+  int sum = 0;
+  for (int i = 0; i < numberOfValues; i++){
+    sum += Values[i];
+  }
+  return sum / numberOfValues;
+}
+
+void shiftArrayRight(int array[], const int size) {
+  for (int i = size - 1; i > 0; i--) {
+    array[i] = array[i - 1];
+  }
 }
 
 int readEarthSensor() {
   int rawSensorValue = analogRead(earthSensorPin);
-  int procentSensorValue =  map(rawSensorValue, 0, 1023, 100, -1);
+  int value = map(rawSensorValue, 0, 1023, 100, -1);
   Serial.print("earthSensor: ");
-  Serial.println(procentSensorValue);
-  return procentSensorValue;
+  Serial.println(value);
+  return value;
+}
+
+int earthInterupt(const int latestEarthValue) {
+  shiftArrayRight(earthArray, numberOfValuesInAvrege);
+  earthArray[0] = latestEarthValue;
+  return calculateAverage(numberOfValuesInAvrege, earthArray);
+}
+
+int humInterupt(const int latestHumValue) {
+  shiftArrayRight(humArray, numberOfValuesInAvrege);
+  humArray[0] = latestHumValue;
+  return calculateAverage(numberOfValuesInAvrege, humArray);
+}
+
+int tempInterupt(const int latestTempValue) {
+  shiftArrayRight(tempArray, numberOfValuesInAvrege);
+  return calculateAverage(numberOfValuesInAvrege, tempArray);
+}
+
+bool triggerEarthInterupt(const int latestEarthValue, const int interuptAt) {
+  if (abs(latestEarthValue - earthArray[0]) >= interuptAt) {
+    return true;
+  }
+  return false;
+}
+
+bool triggerHumInterupt(const int latestHumValue, const int interuptAt) {
+  if (abs(latestHumValue - humArray[0] >= interuptAt)) {
+    return true;
+  }
+  return false;
+}
+
+bool triggerTempInterupt(const int latestTempValue, const int interuptAt) {
+  if (abs(latestTempValue - tempArray[0] >= interuptAt)) {
+    return true;
+  }
+  return false;
+}
+
+int firebaseUpload(DataType dataType) {
+  switch (dataType) {
+  case DataType::earth:
+    Serial.println("has uploaded earthData");
+    return fb.setInt("sensor/earth/" + timeClient.getFormattedTime() + "/hum", earthInterupt(readEarthSensor()));
+  break;
+  case DataType::hum:
+    Serial.println("has uploaded humData");
+    return fb.setInt("sensor/air/hum/" + timeClient.getFormattedTime() + "/%", humInterupt(getHum()));
+  break;
+  case DataType::temp:
+    Serial.println("has uploaded tempData");
+    return fb.setInt("sensor/air/temp/" + timeClient.getEpochTime(), tempInterupt(getTemp()));
+  }
+  return 0;
 }
 
 void wifiSetup() {
   WiFi.disconnect();
   delay(1000);
 
-  /* Connect to WiFi */
   Serial.println();
   Serial.println();
   Serial.print("Connecting to: ");
@@ -85,70 +199,25 @@ void hardwereSetup() {
   pinMode(LED_BUILTIN, OUTPUT);
 }
 
-void firebase() {
-  /*
-    Set String, Int, Float, or Bool in Firebase
-    
-    Parameters:
-      - path: The path in Firebase where the data will be stored.
-      - data: The value to set, which can be of type String, Int, Float, or Bool.
+void softwereSetup() {
+  // wifiSetup();
+  // timeSetup();
+}
 
-    Returns:
-      - HTTP response code as an integer.
-        - 200 indicates success.
-        - Other codes indicate failure.
-  */
-  Serial.println("Started firebase func");
+void setup() {
+  hardwereSetup();
+  softwereSetup();
+}
 
-  if (fb.setString("Example/myString", "Cool!") == 200){ 
-    Serial.println("succes");
+void loop() {
+  if(triggerEarthInterupt(earthArray[0], earthInteruptAt)) {
+    firebaseUpload(DataType::earth);
   }
-  
-  fb.setInt("Example/myInt", 123);
-  fb.setFloat("Example/myFloat", 45.67);
-  fb.setBool("Example/myBool", true);
-  fb.pushString("Push", "Foo-Bar");
-  fb.pushInt("Push", 890);
-  fb.pushFloat("Push", 12.34);
-  fb.pushBool("Push", false);
-
-  /*
-    Get String, Int, Float, or Bool from Firebase
-    
-    Parameters:
-      - path: The path in Firebase from which the data will be retrieved.
-
-    Returns:
-      - The value retrieved from Firebase as a String, Int, Float, or Bool.
-      - If the HTTP response code is not 200, returns NULL (for String) or 0 (for Int, Float, Bool).
-  */
-  String retrievedString = fb.getString("Example/myString");
-  Serial.print("Retrieved String:\t");
-  Serial.println(retrievedString);
-
-  int retrievedInt = fb.getInt("Example/myInt");
-  Serial.print("Retrieved Int:\t\t");
-  Serial.println(retrievedInt);
-
-  float retrievedFloat = fb.getFloat("Example/myFloat");
-  Serial.print("Retrieved Float:\t");
-  Serial.println(retrievedFloat);
-
-  bool retrievedBool = fb.getBool("Example/myBool");
-  Serial.print("Retrieved Bool:\t\t");
-  Serial.println(retrievedBool);
-
-  /*
-    Remove Data from Firebase
-    
-    Parameters:
-      - path: The path in Firebase from which the data will be removed.
-
-    Returns:
-      - HTTP response code as an integer.
-        - 200 indicates success.
-        - Other codes indicate failure.
-  */
-  fb.remove("Example");
-  fb.remove("Push");
+  if(triggerHumInterupt(humArray[0], humInteruptAt)) {
+    firebaseUpload(DataType::hum);
   }
+  if(triggerTempInterupt(tempArray[0], tempInteruptAt)) {
+    firebaseUpload(DataType::temp);
+  }
+  delay(10);
+}
