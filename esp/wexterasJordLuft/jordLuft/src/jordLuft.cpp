@@ -27,7 +27,6 @@
 #include <AM2320.h>
 #include <WiFiUdp.h>
 
-
 Firebase fb(REFERENCE_URL, AUTH_TOKEN);
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP);
@@ -35,13 +34,15 @@ AM2320 airSensor;
 
 const int earthSensorPin = 0;
 const int numberOfValuesInAvrege = 3;
-const int earthInteruptAt = 2;
+const int earthInteruptAt = 5;
 const int humInteruptAt = 5;
-const int tempInteruptAt = 2;
+const int tempInteruptAt = 3;
 
 int earthArray[numberOfValuesInAvrege];
 int humArray[numberOfValuesInAvrege];
 int tempArray[numberOfValuesInAvrege];
+
+String isoDate = "";
 
 enum class DataType {
   earth,
@@ -63,6 +64,7 @@ int getTemp() {
       break;
     }
   }
+  Serial.println("ERR: Unknown error getting temperature");
   return 0;
 }
 
@@ -80,6 +82,7 @@ int getHum() {
       break;
     }
   }
+  Serial.println("ERR: Unknown error getting humidity");
   return 0;
 }
 
@@ -89,17 +92,26 @@ void timeSetup() {
 }
 
 void updateTime() {
-  while(!timeClient.update()) {
-    timeClient.forceUpdate();
-  }
+    timeClient.update();
+    time_t epochTime = timeClient.getEpochTime();
+
+    struct tm ptm;
+    gmtime_r(&epochTime, &ptm);
+
+    char buffer[32];
+    snprintf(buffer, sizeof(buffer), "%04d-%02d-%02dT%02d:%02d:%02dZ",
+             ptm.tm_year + 1900, ptm.tm_mon + 1, ptm.tm_mday,
+             timeClient.getHours(), timeClient.getMinutes(), timeClient.getSeconds());
+
+    isoDate = String(buffer);
 }
 
-int calculateAverage(const int numberOfValues, const int Values[]) {
+int calculateAverage(const int numberOfValuesInAverage, const int Values[]) {
   int sum = 0;
-  for (int i = 0; i < numberOfValues; i++){
+  for (int i = 0; i < numberOfValuesInAverage; i++){
     sum += Values[i];
   }
-  return sum / numberOfValues;
+  return sum / numberOfValuesInAverage;
 }
 
 void shiftArrayRight(int array[], const int size) {
@@ -111,8 +123,8 @@ void shiftArrayRight(int array[], const int size) {
 int readEarthSensor() {
   int rawSensorValue = analogRead(earthSensorPin);
   int value = map(rawSensorValue, 0, 1023, 100, -1);
-  Serial.print("earthSensor: ");
-  Serial.println(value);
+  // Serial.print("earthSensor: ");
+  // Serial.println(value);
   return value;
 }
 
@@ -130,6 +142,7 @@ int humInterupt(const int latestHumValue) {
 
 int tempInterupt(const int latestTempValue) {
   shiftArrayRight(tempArray, numberOfValuesInAvrege);
+  tempArray[0] = latestTempValue;
   return calculateAverage(numberOfValuesInAvrege, tempArray);
 }
 
@@ -158,16 +171,14 @@ int firebaseUpload(DataType dataType) {
   switch (dataType) {
   case DataType::earth:
     Serial.println("has uploaded earthData");
-    return fb.setInt("sensor/earth/" + timeClient.getFormattedTime() + "/hum", earthInterupt(readEarthSensor()));
-  break;
+  return fb.setInt(("sensor/earth/" + isoDate + "/soil").c_str(), readEarthSensor());
   case DataType::hum:
     Serial.println("has uploaded humData");
-    return fb.setInt("sensor/air/hum/" + timeClient.getFormattedTime() + "/%", humInterupt(getHum()));
-  break;
+  return fb.setInt(("sensor/air/hum/" + isoDate + "/moist").c_str(), getHum());
   case DataType::temp:
     Serial.println("has uploaded tempData");
-    return fb.setInt("sensor/air/temp/" + timeClient.getEpochTime(), tempInterupt(getTemp()));
-  }
+  return fb.setInt(("sensor/air/temp/" + isoDate + "/C").c_str(), getTemp());
+  };
   return 0;
 }
 
@@ -197,6 +208,24 @@ void wifiSetup() {
 void hardwereSetup() {
   Serial.begin(9600);
   pinMode(LED_BUILTIN, OUTPUT);
+  Wire.begin(D5, D6);
+}
+
+void checkIfAirSensorIsOnline() {
+  if(airSensor.measure()) {
+    // Serial.println("Sensor is online");
+    return;
+  }
+  switch (airSensor.getErrorCode()) {
+  case 1:
+    Serial.println("ERR: Sensor is offline");
+    delay(1000);
+    break;
+  case 2:
+    Serial.println("ERR: CRC validaion failed");
+    delay(1000);
+    break;
+  }
 }
 
 void softwereSetup() {
@@ -210,16 +239,20 @@ void setup() {
 }
 
 void loop() {
-  digitalWrite(LED_BUILTIN, LOW);
-  if(triggerEarthInterupt(earthArray[0], earthInteruptAt)) {
+  digitalWrite(LED_BUILTIN, HIGH);
+  checkIfAirSensorIsOnline();
+  if(triggerEarthInterupt(readEarthSensor(), earthInteruptAt)) {
+    updateTime();
     firebaseUpload(DataType::earth);
   }
-  if(triggerHumInterupt(humArray[0], humInteruptAt)) {
+  if(triggerHumInterupt(getHum(), humInteruptAt)) {
+    updateTime();
     firebaseUpload(DataType::hum);
   }
-  if(triggerTempInterupt(tempArray[0], tempInteruptAt)) {
+  if(triggerTempInterupt(getTemp(), tempInteruptAt)) {
+    updateTime();
     firebaseUpload(DataType::temp);
   }
-  digitalWrite(LED_BUILTIN, HIGH);
+  digitalWrite(LED_BUILTIN, LOW);
   delay(10);
 }
