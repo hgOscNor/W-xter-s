@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # Quasar App (wextaras)
+=======
+# Quasar App (wexteras)
+>>>>>>> 142d6baa33a5bfc42e364dc235d701d137f013d1
 
 A Quasar Project
 

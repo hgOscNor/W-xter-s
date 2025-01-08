@@ -2,7 +2,6 @@
   <div class="controllerObj">
     <ControllerComp name="Fläktkontroller"></ControllerComp>
     <ControllerComp name="Pump"></ControllerComp>
-    <ControllerComp name="tefghjcvfghst"></ControllerComp>
   </div>
 </template>
 

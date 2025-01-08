@@ -1,9 +1,17 @@
 {
+<<<<<<< HEAD
   "name": "wextaras",
   "version": "0.0.1",
   "description": "A Quasar Project",
   "productName": "Quasar App",
   "author": "hgludrum <ludvig.rummelhoff@hitachigymnasiet.se>",
+=======
+  "name": "wexteras",
+  "version": "0.0.1",
+  "description": "A Quasar Project",
+  "productName": "Quasar App",
+  "author": "hgOscNor <oscar.noring@hitachigymnasiet.se>",
+>>>>>>> 142d6baa33a5bfc42e364dc235d701d137f013d1
   "type": "module",
   "private": true,
   "scripts": {
