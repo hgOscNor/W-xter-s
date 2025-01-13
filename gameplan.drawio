@@ -1,40 +1,46 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0" version="25.0.3">
-  <diagram name="Sida-1" id="S1aX9hF0R4ryH1p3xK2n">
-    <mxGraphModel dx="786" dy="1672" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
-      <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
-        <mxCell id="YpvVOzl85OfcXX8SGw4_-1" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Växthus&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
-          <mxGeometry x="120" y="250" width="150" height="70" as="geometry" />
-        </mxCell>
-        <mxCell id="YpvVOzl85OfcXX8SGw4_-2" value="Esp8266" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="150" y="150" width="90" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="YpvVOzl85OfcXX8SGw4_-6" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="YpvVOzl85OfcXX8SGw4_-1" target="YpvVOzl85OfcXX8SGw4_-2" edge="1">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="320" y="250" as="sourcePoint" />
-            <mxPoint x="370" y="200" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="YpvVOzl85OfcXX8SGw4_-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0;entryDx=0;entryDy=0;" parent="1" source="YpvVOzl85OfcXX8SGw4_-8" target="YpvVOzl85OfcXX8SGw4_-2" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="YpvVOzl85OfcXX8SGw4_-8" value="&lt;div&gt;dht11&lt;/div&gt;&lt;div&gt;(temp, hum)&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="240" y="80" width="70" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="YpvVOzl85OfcXX8SGw4_-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0;entryDx=0;entryDy=0;" parent="1" source="YpvVOzl85OfcXX8SGw4_-10" target="YpvVOzl85OfcXX8SGw4_-2" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="YpvVOzl85OfcXX8SGw4_-10" value="Jordfuktighet" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="100" y="80" width="80" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="YpvVOzl85OfcXX8SGw4_-13" value="Inköpslista&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;a href=&quot;https://www.biltema.se/bygg/vvs/sanitet-och-vatten/ventiler-vvs/minikulventiler-vvs/minikulventil-rak-12-x-12-2000061360&quot;&gt;Ventil&lt;/a&gt;&lt;/div&gt;&lt;div&gt;&lt;a href=&quot;https://www.electrokit.com/jordfuktighetssensor&quot;&gt;Jordmätare&lt;/a&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="640" y="-10" width="157" height="260" as="geometry" />
-        </mxCell>
-        <mxCell id="oL4XQkMD9EXwZcFvYe_M-1" value="Exempel kod:&amp;nbsp;&lt;div&gt;&lt;a href=&quot;https://www.electronics360.org/how-to-use-fc-28-soil-moisture-sensor-module-with-arduino-uno-diy/&quot;&gt;Jordmätare&lt;/a&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="650" y="-280" width="120" height="220" as="geometry" />
-        </mxCell>
-      </root>
-    </mxGraphModel>
-  </diagram>
+<mxfile host="65bd71144e">
+    <diagram name="Sida-1" id="S1aX9hF0R4ryH1p3xK2n">
+        <mxGraphModel dx="713" dy="1793" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="YpvVOzl85OfcXX8SGw4_-1" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Växthus&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="120" y="250" width="150" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="YpvVOzl85OfcXX8SGw4_-2" value="Esp8266" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="150" y="150" width="90" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="YpvVOzl85OfcXX8SGw4_-6" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="YpvVOzl85OfcXX8SGw4_-1" target="YpvVOzl85OfcXX8SGw4_-2" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="320" y="250" as="sourcePoint"/>
+                        <mxPoint x="370" y="200" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="YpvVOzl85OfcXX8SGw4_-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0;entryDx=0;entryDy=0;" parent="1" source="YpvVOzl85OfcXX8SGw4_-8" target="YpvVOzl85OfcXX8SGw4_-2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="YpvVOzl85OfcXX8SGw4_-8" value="&lt;div&gt;dht11&lt;/div&gt;&lt;div&gt;(temp, hum)&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="240" y="80" width="70" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="YpvVOzl85OfcXX8SGw4_-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0;entryDx=0;entryDy=0;" parent="1" source="YpvVOzl85OfcXX8SGw4_-10" target="YpvVOzl85OfcXX8SGw4_-2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="YpvVOzl85OfcXX8SGw4_-10" value="Jordfuktighet" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="100" y="80" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="YpvVOzl85OfcXX8SGw4_-13" value="Inköpslista&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;a href=&quot;https://www.biltema.se/bygg/vvs/sanitet-och-vatten/ventiler-vvs/minikulventiler-vvs/minikulventil-rak-12-x-12-2000061360&quot;&gt;Ventil&lt;/a&gt;&lt;/div&gt;&lt;div&gt;&lt;a href=&quot;https://www.electrokit.com/jordfuktighetssensor&quot;&gt;Jordmätare&lt;/a&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="640" y="-10" width="157" height="260" as="geometry"/>
+                </mxCell>
+                <mxCell id="oL4XQkMD9EXwZcFvYe_M-1" value="Exempel kod:&amp;nbsp;&lt;div&gt;&lt;a href=&quot;https://www.electronics360.org/how-to-use-fc-28-soil-moisture-sensor-module-with-arduino-uno-diy/&quot;&gt;Jordmätare&lt;/a&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="650" y="-280" width="120" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="&lt;font face=&quot;AvenirNext, Lato, Arial, sans-serif&quot; color=&quot;#ba0087&quot;&gt;&lt;span style=&quot;font-size: 20px; background-color: rgb(255, 255, 255);&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+                    <mxGeometry x="330" y="-910" width="330" height="250" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="•" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+                    <mxGeometry x="330" y="-910" width="330" height="250" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
 </mxfile>
