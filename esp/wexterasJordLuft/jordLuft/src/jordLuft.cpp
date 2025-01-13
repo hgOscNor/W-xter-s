@@ -32,6 +32,15 @@ WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP);
 AM2320 airSensor;
 
+const byte pumpSpeedControl = D1;
+const byte pumpDirection = D3;
+const byte fanSpeedControl = D2;
+const byte fanDirection = D4;
+
+unsigned long startMillis;
+unsigned long currentMillis;
+int timeBetweenFetches = 5 * 1000;
+
 const int earthSensorPin = 0;
 const int numberOfValuesInAvrege = 3;
 const int earthInteruptAt = 5;
@@ -42,6 +51,33 @@ int earthArray[numberOfValuesInAvrege];
 int humArray[numberOfValuesInAvrege];
 int tempArray[numberOfValuesInAvrege];
 
+int earthValue;
+int humValue;
+int tempValue;
+
+bool fanIsOn = false;
+bool fanManualOverride = false;
+int fanSpeed = 0;
+int fanManualSpeed = 0;
+int fanTurnOnAtHum = 0;
+int fanTurnOnAtTemp = 0;
+
+bool pumpIsOn = false;
+bool pumpManualOverride = false;
+int pumpSpeed = 0;
+int pumpManualSpeed = 0;
+int pumpTurnOnAtSoil = 0;
+int pumpTimeOn = 30 * 1000;
+
+bool trapDoorIsOpen = false;
+bool trapDoorManualOverride = false;
+int trapDoorTurnOnAtHum = 0;
+int trapDoorTurnOnAtTemp = 0;
+
+int maxSpeed = 1020;
+
+int i = 0;
+
 String isoDate = "";
 
 enum class DataType {
@@ -49,6 +85,29 @@ enum class DataType {
   hum,
   temp,
 };
+
+void firebaseFetch() {
+  fanManualOverride = fb.getBool("control/fan/manualOverride");
+  fanManualSpeed = fb.getInt("control/fan/manualSpeed");
+  fanTurnOnAtHum = fb.getInt("control/fan/turnOnAtHum");
+  fanTurnOnAtTemp = fb.getInt("control/fan/turnOnAtTemp");
+
+  pumpManualOverride = fb.getBool("control/pump/manualOverride");
+  pumpManualSpeed = fb.getInt("control/pump/speed");
+  pumpTurnOnAtSoil = fb.getInt("control/pump/turnOnAtSoil");
+
+  trapDoorManualOverride = fb.getBool("control/trapDoor/manualOverride");
+  trapDoorTurnOnAtHum = fb.getInt("control/trapDoor/turnOnAtHum");
+  trapDoorTurnOnAtTemp = fb.getInt("control/trapDoor/turnOnAtTemp");
+}
+
+void motorSetup() {
+  pinMode(pumpSpeed, OUTPUT);
+  pinMode(pumpDirection, HIGH);
+
+  pinMode(fanSpeed, OUTPUT);
+  pinMode(fanDirection, HIGH);
+}
 
 int getTemp() {
   if(airSensor.measure()) {
@@ -123,27 +182,25 @@ void shiftArrayRight(int array[], const int size) {
 int readEarthSensor() {
   int rawSensorValue = analogRead(earthSensorPin);
   int value = map(rawSensorValue, 0, 1023, 100, -1);
-  // Serial.print("earthSensor: ");
-  // Serial.println(value);
   return value;
 }
 
 int earthInterupt(const int latestEarthValue) {
   shiftArrayRight(earthArray, numberOfValuesInAvrege);
   earthArray[0] = latestEarthValue;
-  return calculateAverage(numberOfValuesInAvrege, earthArray);
+  return earthArray[0];
 }
 
 int humInterupt(const int latestHumValue) {
   shiftArrayRight(humArray, numberOfValuesInAvrege);
   humArray[0] = latestHumValue;
-  return calculateAverage(numberOfValuesInAvrege, humArray);
+  return humArray[0];
 }
 
 int tempInterupt(const int latestTempValue) {
   shiftArrayRight(tempArray, numberOfValuesInAvrege);
   tempArray[0] = latestTempValue;
-  return calculateAverage(numberOfValuesInAvrege, tempArray);
+  return tempArray[0];
 }
 
 bool triggerEarthInterupt(const int latestEarthValue, const int interuptAt) {
@@ -154,14 +211,14 @@ bool triggerEarthInterupt(const int latestEarthValue, const int interuptAt) {
 }
 
 bool triggerHumInterupt(const int latestHumValue, const int interuptAt) {
-  if (abs(latestHumValue - humArray[0] >= interuptAt)) {
+  if (abs(latestHumValue - humArray[0]) >= interuptAt) {
     return true;
   }
   return false;
 }
 
 bool triggerTempInterupt(const int latestTempValue, const int interuptAt) {
-  if (abs(latestTempValue - tempArray[0] >= interuptAt)) {
+  if (abs(latestTempValue - tempArray[0]) >= interuptAt) {
     return true;
   }
   return false;
@@ -171,13 +228,13 @@ int firebaseUpload(DataType dataType) {
   switch (dataType) {
   case DataType::earth:
     Serial.println("has uploaded earthData");
-  return fb.setInt(("sensor/earth/" + isoDate + "/soil").c_str(), readEarthSensor());
+  return fb.setInt(("sensor/earth/" + isoDate + "/soil").c_str(), earthValue);
   case DataType::hum:
     Serial.println("has uploaded humData");
-  return fb.setInt(("sensor/air/hum/" + isoDate + "/moist").c_str(), getHum());
+  return fb.setInt(("sensor/air/hum/" + isoDate + "/moist").c_str(), humValue);
   case DataType::temp:
     Serial.println("has uploaded tempData");
-  return fb.setInt(("sensor/air/temp/" + isoDate + "/C").c_str(), getTemp());
+  return fb.setInt(("sensor/air/temp/" + isoDate + "/C").c_str(), tempValue);
   };
   return 0;
 }
@@ -206,9 +263,10 @@ void wifiSetup() {
 }
 
 void hardwereSetup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   pinMode(LED_BUILTIN, OUTPUT);
   Wire.begin(D5, D6);
+  motorSetup();
 }
 
 void checkIfAirSensorIsOnline() {
@@ -231,28 +289,102 @@ void checkIfAirSensorIsOnline() {
 void softwereSetup() {
   wifiSetup();
   timeSetup();
+  startMillis = millis();
 }
 
 void setup() {
   hardwereSetup();
   softwereSetup();
+  // analogWrite(pumpSpeedControl, maxSpeed);
+}
+
+void pump() {
+  if (pumpManualOverride) {
+    if (pumpManualSpeed > 0) {
+      analogWrite(pumpSpeedControl, pumpManualSpeed);
+      pumpIsOn = true;
+    }
+    else {
+      analogWrite(pumpSpeedControl, 0);
+      pumpIsOn = false;
+    }
+  }
+  else if (earthValue >= pumpTurnOnAtSoil) {
+    Serial.println("Pump is on");
+    analogWrite(pumpSpeedControl, maxSpeed);
+    pumpIsOn = true;
+    // analogWrite(pumpSpeed, 0);
+  }
+  else {
+    analogWrite(pumpSpeedControl, 0);
+    pumpIsOn = false;
+  }
+}
+
+void fan() {
+  if (fanManualOverride) {
+    if (fanManualSpeed > 0) {
+      Serial.println("Fan is on");
+      analogWrite(fanSpeedControl, fanManualSpeed);
+      fanIsOn = true;
+      fb.setBool("control/fan/isOn", fanIsOn);
+    }
+    else {
+      analogWrite(fanSpeed, 0);
+      fanIsOn = false;
+      fb.setBool("control/fan/isOn", fanIsOn);
+    }
+  }
+  else if (humValue >= fanTurnOnAtHum || tempValue >= fanTurnOnAtTemp) {
+      Serial.println("Fan is on");
+      analogWrite(fanSpeedControl, maxSpeed);
+      fanIsOn = true;
+      fb.setBool("control/fan/isOn", fanIsOn);
+    }
+  else {
+    analogWrite(fanSpeedControl, 0);
+    fanIsOn = false;
+    fb.setBool("control/fan/isOn", fanIsOn);
+  }
 }
 
 void loop() {
-  digitalWrite(LED_BUILTIN, HIGH);
+  currentMillis = millis();
   checkIfAirSensorIsOnline();
-  if(triggerEarthInterupt(readEarthSensor(), earthInteruptAt)) {
+  earthValue = readEarthSensor();
+  humValue = getHum();
+  tempValue = getTemp();
+  if (currentMillis - startMillis >= timeBetweenFetches || i == 0) {
+    startMillis = currentMillis;
+    firebaseFetch();
+  }
+  if(triggerEarthInterupt(earthValue, earthInteruptAt)) {
+    digitalWrite(LED_BUILTIN, HIGH);
     updateTime();
+    shiftArrayRight(earthArray, numberOfValuesInAvrege);
+    earthArray[0] = earthValue;
     firebaseUpload(DataType::earth);
+    digitalWrite(LED_BUILTIN, LOW);
   }
-  if(triggerHumInterupt(getHum(), humInteruptAt)) {
+  if(triggerHumInterupt(humValue, humInteruptAt)) {
+    digitalWrite(LED_BUILTIN, HIGH);
     updateTime();
+    shiftArrayRight(humArray, numberOfValuesInAvrege);
+    humArray[0] = humValue;
     firebaseUpload(DataType::hum);
+    digitalWrite(LED_BUILTIN, LOW);
   }
-  if(triggerTempInterupt(getTemp(), tempInteruptAt)) {
+  if(triggerTempInterupt(tempValue, tempInteruptAt)) {
+    digitalWrite(LED_BUILTIN, HIGH);
     updateTime();
+    shiftArrayRight(tempArray, numberOfValuesInAvrege);
+    tempArray[0] = tempValue;
     firebaseUpload(DataType::temp);
+    digitalWrite(LED_BUILTIN, LOW);
   }
-  digitalWrite(LED_BUILTIN, LOW);
-  delay(10);
+  fan();
+  pump();
+  
+  i++;
+  delay(100);
 }
