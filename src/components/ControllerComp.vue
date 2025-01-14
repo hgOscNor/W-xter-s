@@ -2,9 +2,18 @@
   <div class="inputDiv">
     <h3>{{ props.name }}</h3>
 
+    <input
+      type="number"
+      min="0"
+      max="100"
+      v-model="humTurnOn"
+      @input="emitUpdate('turnOnAtHum', turnOnAtHum)"
+    />
+    <input type="number" min="0" max="100" v-model="tempTurnOn" />
     <input type="number" min="0" max="100" v-model="inputValue" />
+
     <div>
-      <q-slider v-model="inputValue" :min="0" :max="100" step="1" />
+      <q-slider v-model.lazy.number="inputValue" :min="0" :max="100" :step="1" />
     </div>
 
     <q-toggle size="xl" class="checkbox" v-model="checkbox" />
@@ -14,21 +23,57 @@
 <script setup>
 import { ref, watch } from 'vue'
 
+//Props
 const props = defineProps({
   name: String,
+  isOn: Boolean,
   startupValInt: Number,
   startupValBool: Boolean,
+  turnOnAtHum: Number,
+  turnOnAtTemp: Number,
 })
 
-const inputValue = ref(startupValInt)
-let checkbox = ref(startupValBool)
+watch(
+  () => props.startupValInt,
+  (newValue) => {
+    inputValue.value = newValue
+  },
+)
+watch(
+  () => props.startupValBool,
+  (newValue) => {
+    checkbox.value = newValue
+  },
+)
+watch(
+  () => props.turnOnAtHum,
+  (newValue) => {
+    checkbox.value = newValue
+  },
+)
+
+const inputValue = ref(props.startupValInt)
+const checkbox = ref(props.startupValBool)
+const humTurnOn = ref(props.turnOnAtHum)
+const tempTurnOn = ref(props.turnOnAtTemp)
+
+// Emits
+const emit = defineEmits([
+  'update:isOn',
+  'update:startupValInt',
+  'update:startupValBool',
+  'update:turnOnAtHum',
+  'update:turnOnAtTemp',
+])
+
+watch(inputValue, (newValue) => emit('update:startupValInt', newValue))
 
 watch(checkbox, (val) => {
   console.log(val)
 })
 
 watch(inputValue, (val) => {
-  if (val < 0) {
+  if (val < 0 || val === isNaN() || val === undefined) {
     inputValue.value = 0
   } else if (val > 100) {
     inputValue.value = 100
