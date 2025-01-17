@@ -42,7 +42,7 @@ const byte fanDirection = D4;
 
 unsigned long startMillis;
 unsigned long currentMillis;
-unsigned long timeBetweenFetches = 5 * 1000;
+unsigned long timeBetweenFetches = 5 * 10000;
 
 const int earthSensorPin = 0;
 const int numberOfValuesInAvrege = 3;
@@ -79,7 +79,7 @@ int trapdoorOpenAtTemp = 0;
 
 int servoPos = 0;
 
-int maxSpeed = 1020;
+int maxSpeed = 1024;
 
 int i = 0;
 
@@ -96,35 +96,55 @@ void firebaseFetch()
 {
   Firebase.getBool(firebaseData, "control/fan/manualOverride");
   fanManualOverride = firebaseData.boolData();
+  // Serial.print("Fan manual override: ");
+  // Serial.println(fanManualOverride);
   Firebase.getInt(firebaseData, "control/fan/manualSpeed");
   fanManualSpeed = map(firebaseData.intData(), 0, 100, 450, 1024);
+  // Serial.print("Fan manual speed: ");
+  // Serial.println(fanManualSpeed);
   Firebase.getInt(firebaseData, "control/fan/turnOnAtHum");
   fanTurnOnAtHum = firebaseData.intData();
+  // Serial.print("Fan turn on at humidity: ");
+  // Serial.println(fanTurnOnAtHum);
   Firebase.getInt(firebaseData, "control/fan/turnOnAtTemp");
   fanTurnOnAtTemp = firebaseData.intData();
+  // Serial.print("Fan turn on at temperature: ");
+  // Serial.println(fanTurnOnAtTemp);
   Firebase.getBool(firebaseData, "control/pump/manualOverride");
-
   pumpManualOverride = firebaseData.boolData();
+  // Serial.print("Pump manual override: ");
+  // Serial.println(pumpManualOverride);
   Firebase.getInt(firebaseData, "control/pump/speed");
   pumpManualSpeed = map(firebaseData.intData(), 0, 100, 450, 1024);
+  // Serial.print("Pump manual speed: ");
+  // Serial.println(pumpManualSpeed);
   Firebase.getInt(firebaseData, "control/pump/turnOnAtSoil");
   pumpTurnOnAtSoil = firebaseData.intData();
+  // Serial.print("Pump turn on at soil: ");
+  // Serial.println(pumpTurnOnAtSoil);
+  Firebase.getInt(firebaseData, "control/pump/timeOn");
 
   Firebase.getBool(firebaseData, "control/trapdoor/manualOverride");
   trapdoorManualOverride = firebaseData.boolData();
+  // Serial.print("Trapdoor manual override: ");
+  // Serial.println(trapdoorManualOverride);
   Firebase.getInt(firebaseData, "control/trapdoor/openAtHum");
   trapdoorOpenAtHum = firebaseData.intData();
+  // Serial.print("Trapdoor open at humidity: ");
+  // Serial.println(trapdoorOpenAtHum);
   Firebase.getInt(firebaseData, "control/trapdoor/openAtTemp");
   trapdoorOpenAtTemp = firebaseData.intData();
+  // Serial.print("Trapdoor open at temperature: ");
+  // Serial.println(trapdoorOpenAtTemp);
 }
 
 void motorSetup()
 {
-  pinMode(pumpSpeed, OUTPUT);
-  pinMode(pumpDirection, HIGH);
+  pinMode(pumpSpeedControl, OUTPUT);
+  digitalWrite(pumpDirection, HIGH);
 
-  pinMode(fanSpeed, OUTPUT);
-  pinMode(fanDirection, HIGH);
+  pinMode(fanSpeedControl, OUTPUT);
+  digitalWrite(fanDirection, HIGH);
 }
 
 int getTemp()
@@ -317,7 +337,7 @@ void softwereSetup()
 {
   wifiSetup();
   timeSetup();
-  servo.attach(D2, 544, 2400);
+  servo.attach(D7, 544, 2400);
   startMillis = millis();
   Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
   Firebase.reconnectWiFi(true);
@@ -345,7 +365,7 @@ void pump()
       pumpIsOn = false;
     }
   }
-  else if (earthValue <= pumpTurnOnAtSoil)
+  else if (earthValue >= pumpTurnOnAtSoil)
   {
     analogWrite(pumpSpeedControl, maxSpeed);
     pumpIsOn = true;
@@ -361,28 +381,20 @@ void fan()
 {
   if (fanManualOverride)
   {
-    if (fanManualSpeed > 0)
-    {
-      analogWrite(fanSpeedControl, fanManualSpeed);
-      fanIsOn = true;
-      Firebase.setBool(firebaseData, "control/fan/isOn", fanIsOn);
-    }
-    else
-    {
-      analogWrite(fanSpeed, 0);
-      fanIsOn = false;
-      Firebase.setBool(firebaseData, "control/fan/isOn", fanIsOn);
-    }
-  }
-  else if (humValue >= fanTurnOnAtHum || tempValue >= fanTurnOnAtTemp)
-  {
-    analogWrite(fanSpeedControl, maxSpeed);
+    analogWrite(fanSpeedControl, fanManualSpeed);
     fanIsOn = true;
     Firebase.setBool(firebaseData, "control/fan/isOn", fanIsOn);
   }
-  else
+  else if (humValue >= fanTurnOnAtHum || tempValue >= fanTurnOnAtTemp)
+  {
+    analogWrite(fanSpeedControl, fanManualSpeed);
+    fanIsOn = true;
+    Firebase.setBool(firebaseData, "control/fan/isOn", fanIsOn);
+  }
+  else if ((humValue <= fanTurnOnAtHum && fanManualOverride == false) || (tempValue <= fanTurnOnAtTemp && fanManualOverride == false))
   {
     analogWrite(fanSpeedControl, 0);
+    Serial.println("Fan is off");
     fanIsOn = false;
     Firebase.setBool(firebaseData, "control/fan/isOn", fanIsOn);
   }
@@ -392,11 +404,8 @@ void trapdoor()
 {
   if (trapdoorManualOverride == true)
   {
-    if (trapdoorIsOpen == false)
-    {
-      servo.write(90);
       trapdoorIsOpen = true;
-    }
+      servo.write(90);
     Firebase.setBool(firebaseData, "control/trapdoor/open", trapdoorIsOpen);
   }
   else if (humValue >= trapdoorOpenAtHum || tempValue >= trapdoorOpenAtTemp)
@@ -418,14 +427,15 @@ void trapdoor()
 
 void loop()
 {
-  currentMillis = millis();
+  // currentMillis = millis();
   earthValue = readEarthSensor();
   humValue = getHum();
   tempValue = getTemp();
-  if (currentMillis - startMillis >= timeBetweenFetches || i == 0)
+  if (i == 10 || i == 0)
   {
-    startMillis = currentMillis;
+    // startMillis = millis() + startMillis;
     firebaseFetch();
+    i = 1;
   }
   if (triggerEarthInterupt(earthValue, earthInteruptAt))
   {
