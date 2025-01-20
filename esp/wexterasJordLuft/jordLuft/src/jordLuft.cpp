@@ -99,9 +99,9 @@ void firebaseFetch()
   // Serial.print("Fan manual override: ");
   // Serial.println(fanManualOverride);
   Firebase.getInt(firebaseData, "control/fan/manualSpeed");
-  fanManualSpeed = map(firebaseData.intData(), 0, 100, 450, 1024);
-  // Serial.print("Fan manual speed: ");
-  // Serial.println(fanManualSpeed);
+  fanManualSpeed = map(firebaseData.intData(), 0, 100, 200, 1024);
+  Serial.print("Fan manual speed: ");
+  Serial.println(fanManualSpeed);
   Firebase.getInt(firebaseData, "control/fan/turnOnAtHum");
   fanTurnOnAtHum = firebaseData.intData();
   // Serial.print("Fan turn on at humidity: ");
@@ -347,56 +347,92 @@ void setup()
 {
   hardwereSetup();
   softwereSetup();
-  // analogWrite(pumpSpeedControl, maxSpeed);
+}
+
+void turnPumpOn()
+{
+  analogWrite(pumpSpeedControl, pumpManualSpeed);  
+  pumpIsOn = true;
+  Firebase.setBool(firebaseData, "control/pump/isOn", pumpIsOn);
+}
+
+void turnPumpOff()
+{
+  analogWrite(pumpSpeedControl, 0);
+  pumpIsOn = false;
+  Firebase.setBool(firebaseData, "control/pump/isOn", pumpIsOn);
 }
 
 void pump()
 {
   if (pumpManualOverride)
   {
-    if (pumpManualSpeed > 0)
-    {
-      analogWrite(pumpSpeedControl, pumpManualSpeed);
-      pumpIsOn = true;
-    }
-    else
-    {
-      analogWrite(pumpSpeedControl, 0);
-      pumpIsOn = false;
-    }
+    turnPumpOn();
   }
   else if (earthValue >= pumpTurnOnAtSoil)
   {
-    analogWrite(pumpSpeedControl, maxSpeed);
-    pumpIsOn = true;
+    turnPumpOn();
   }
   else
   {
-    analogWrite(pumpSpeedControl, 0);
-    pumpIsOn = false;
+    turnPumpOff();
   }
 }
+
+void turnFanOn()
+{
+  analogWrite(fanSpeedControl, fanManualSpeed);
+  fanIsOn = true;
+  Firebase.setBool(firebaseData, "control/fan/isOn", fanIsOn);
+}
+
+void turnFanOff()
+{
+  analogWrite(fanSpeedControl, 0);
+  fanIsOn = false;
+  Firebase.setBool(firebaseData, "control/fan/isOn", fanIsOn);
+}
+
+void openTrapdoor()
+{
+if (trapdoorIsOpen == false)
+  {  
+    servo.write(90);
+    trapdoorIsOpen = true;
+    Firebase.setBool(firebaseData, "control/trapdoor/open", trapdoorIsOpen);
+  }
+}
+
+void closeTrapdoor()
+{
+  if (trapdoorIsOpen == true)
+  { 
+    if (fanIsOn == false)
+    {
+    servo.write(0);
+    trapdoorIsOpen = false;
+    Firebase.setBool(firebaseData, "control/trapdoor/open", trapdoorIsOpen);
+    }
+  }
+}
+
+
 
 void fan()
 {
   if (fanManualOverride)
   {
-    analogWrite(fanSpeedControl, fanManualSpeed);
-    fanIsOn = true;
-    Firebase.setBool(firebaseData, "control/fan/isOn", fanIsOn);
+    turnFanOn();
+    openTrapdoor();
   }
   else if (humValue >= fanTurnOnAtHum || tempValue >= fanTurnOnAtTemp)
   {
-    analogWrite(fanSpeedControl, fanManualSpeed);
-    fanIsOn = true;
-    Firebase.setBool(firebaseData, "control/fan/isOn", fanIsOn);
+    turnFanOn();
+    openTrapdoor();
   }
   else if ((humValue <= fanTurnOnAtHum && fanManualOverride == false) || (tempValue <= fanTurnOnAtTemp && fanManualOverride == false))
   {
-    analogWrite(fanSpeedControl, 0);
-    Serial.println("Fan is off");
-    fanIsOn = false;
-    Firebase.setBool(firebaseData, "control/fan/isOn", fanIsOn);
+    turnFanOff();
   }
 }
 
@@ -404,24 +440,51 @@ void trapdoor()
 {
   if (trapdoorManualOverride == true)
   {
-      trapdoorIsOpen = true;
-      servo.write(90);
-    Firebase.setBool(firebaseData, "control/trapdoor/open", trapdoorIsOpen);
+    openTrapdoor();
   }
   else if (humValue >= trapdoorOpenAtHum || tempValue >= trapdoorOpenAtTemp)
   {
-    if (trapdoorIsOpen == false)
-    {
-      servo.write(90);
-      trapdoorIsOpen = true;
-    }
-    Firebase.setBool(firebaseData, "control/trapdoor/open", trapdoorIsOpen);
+    openTrapdoor();
   }
   else
   {
-    servo.write(0);
-    trapdoorIsOpen = false;
-    Firebase.setBool(firebaseData, "control/trapdoor/open", trapdoorIsOpen);
+    closeTrapdoor();
+  }
+}
+
+void earthLoop() {
+  if (triggerEarthInterupt(earthValue, earthInteruptAt))
+  {
+    digitalWrite(LED_BUILTIN, HIGH);
+    updateTime();
+    shiftArrayRight(earthArray, numberOfValuesInAvrege);
+    earthArray[0] = earthValue;
+    firebaseUpload(DataType::earth);
+    digitalWrite(LED_BUILTIN, LOW);
+  }
+}
+
+void humLoop() {
+  if (triggerHumInterupt(humValue, humInteruptAt))
+  {
+    digitalWrite(LED_BUILTIN, HIGH);
+    updateTime();
+    shiftArrayRight(humArray, numberOfValuesInAvrege);
+    humArray[0] = humValue;
+    firebaseUpload(DataType::hum);
+    digitalWrite(LED_BUILTIN, LOW);
+  }
+}
+
+void tempLoop() {
+  if (triggerTempInterupt(tempValue, tempInteruptAt))
+  {
+    digitalWrite(LED_BUILTIN, HIGH);
+    updateTime();
+    shiftArrayRight(tempArray, numberOfValuesInAvrege);
+    tempArray[0] = tempValue;
+    firebaseUpload(DataType::temp);
+    digitalWrite(LED_BUILTIN, LOW);
   }
 }
 
@@ -433,38 +496,13 @@ void loop()
   tempValue = getTemp();
   if (i == 10 || i == 0)
   {
-    // startMillis = millis() + startMillis;
     firebaseFetch();
     i = 1;
   }
-  if (triggerEarthInterupt(earthValue, earthInteruptAt))
-  {
-    digitalWrite(LED_BUILTIN, HIGH);
-    updateTime();
-    shiftArrayRight(earthArray, numberOfValuesInAvrege);
-    earthArray[0] = earthValue;
-    firebaseUpload(DataType::earth);
-    digitalWrite(LED_BUILTIN, LOW);
-  }
-  if (triggerHumInterupt(humValue, humInteruptAt))
-  {
-    digitalWrite(LED_BUILTIN, HIGH);
-    updateTime();
-    shiftArrayRight(humArray, numberOfValuesInAvrege);
-    humArray[0] = humValue;
-    firebaseUpload(DataType::hum);
-    digitalWrite(LED_BUILTIN, LOW);
-  }
-  if (triggerTempInterupt(tempValue, tempInteruptAt))
-  {
-    digitalWrite(LED_BUILTIN, HIGH);
-    updateTime();
-    shiftArrayRight(tempArray, numberOfValuesInAvrege);
-    tempArray[0] = tempValue;
-    firebaseUpload(DataType::temp);
-    digitalWrite(LED_BUILTIN, LOW);
-  }
 
+  earthLoop();
+  humLoop();
+  tempLoop();
   fan();
   pump();
   trapdoor();
