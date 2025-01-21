@@ -6,16 +6,22 @@
     <button @click="LogData">Log</button>
 
     <!-- turn on at ... -->
-    <!-- <input type="number" min="0" max="100" v-model="humTurnOnvalue" />
-    <input type="number" min="0" max="100" v-model="tempTurnOnvalue" /> -->
+    <input type="number" min="0" max="100" v-model="humTurnOnvalue" />
+    <input type="number" min="0" max="100" v-model="tempTurnOnvalue" />
     <!-- speed -->
-    <input type="number" min="0" max="100" v-model="inputValue" />
+    <h5>{{ inputValue }}</h5>
 
     <!-- @update:model-value="LogData" -->
 
     <!-- speed -->
     <div>
-      <q-slider @change="LogData" v-model.lazy.number="inputValue" :min="0" :max="100" :step="1" />
+      <q-slider
+        @change="logManualSpeed"
+        v-model.lazy.number="inputValue"
+        :min="0"
+        :max="100"
+        :step="1"
+      />
     </div>
     <!--Manual override  -->
     <q-toggle
@@ -67,21 +73,10 @@ const manualOverrideValue = ref(props.manualOverrideValue)
 const turnOnAtHumValue = ref(props.turnOnAtHumValue)
 const turnOnAtTempValue = ref(props.turnOnAtTempValue)
 
-// Emits
-// const emit = defineEmits([
-//   'update:isOn',
-//   'update:startupValInt',
-//   'update:manualOverrride',
-//   'update:turnOnAtHum',
-//   'update:turnOnAtTemp',
-// ])
+const emits = defineEmits(['updateManualOverride', 'updateManualSpeed'])
 
-// watch(() => inputValue.value, LogData)
-
-const emits = defineEmits(['log', 'updateManualOverride'])
-
-function LogData() {
-  emits('log', inputValue.value)
+function logManualSpeed() {
+  emits('updateManualSpeed', inputValue.value)
 }
 function logManualOverride() {
   emits('updateManualOverride', manualOverrideValue.value)

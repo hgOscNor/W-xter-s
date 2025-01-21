@@ -8,8 +8,8 @@
       :turnOnAtHumValue="fanData?.turnOnAtHum || 0"
       :turnOnAtTempValue="fanData?.turnOnAtTemp || 0"
       @update:manualOverridevalue="fanDataUpdate"
-      @log="logData"
       @updateManualOverride="logManualOverrideFan"
+      @updateManualSpeed="logManualSpeedFan"
     ></ControllerComp>
     <ControllerComp name="Pump"></ControllerComp>
   </div>
@@ -28,12 +28,15 @@ import { db } from 'src/boot/vuefire'
 
 // Ref
 const fanManualOverrideRef = dbRef(db, 'control/fan/manualOverride')
+const fanSpeedRef = dbRef(db, 'control/fan/manualSpeed')
 
-function logData(message) {
-  console.log(message)
-}
 function logManualOverrideFan(data) {
   set(fanManualOverrideRef, Boolean(data))
+}
+
+function logManualSpeedFan(data) {
+  set(fanSpeedRef, Number(data))
+  console.log(data)
 }
 
 const data = useDatabaseObject(dbRef(db, 'control'))
