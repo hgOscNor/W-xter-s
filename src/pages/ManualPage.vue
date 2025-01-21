@@ -2,56 +2,48 @@
   <div class="controllerObj">
     <ControllerComp
       name="Fläktkontroller"
-      :isOn="fanData?.isOn || false"
-      v-model:startupValBool="fanData.manualOverride"
-      v-model:startupValInt="fanData.manualSpeed"
-      v-model:turnOnAtHum="fanData.turnOnAtHum"
-      v-model:turnOnAtTemp="fanData.turnOnAtTemp"
+      :isOnValue="fanData?.isOn || false"
+      :manualOverrideValue="fanData?.manualOverride || false"
+      :inputValue="fanData?.manualSpeed || 0"
+      :turnOnAtHumValue="fanData?.turnOnAtHum || 0"
+      :turnOnAtTempValue="fanData?.turnOnAtTemp || 0"
+      @update:manualOverridevalue="fanDataUpdate"
+      @log="logData"
     ></ControllerComp>
     <ControllerComp name="Pump"></ControllerComp>
   </div>
 </template>
 
 <script setup>
-import ControllerComp from './components/ControllerComp.vue'
-import { ref as vueRef, onMounted } from 'vue'
-// import './firebase.js'
+import ControllerComp from '../components/ControllerComp.vue'
+import { /*ref as vueRef*/ /*onMounted,*/ watch } from 'vue'
 
-//
+//Firebase
+import {} from /*useRouter*/ 'vue-router'
+import { useDatabaseObject } from 'vuefire'
+import { ref as dbRef /*push*/ } from 'firebase/database'
+import { db } from 'src/boot/vuefire'
+// const router = useRouter()
 
-// Firebase
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js'
-import {
-  getDatabase,
-  ref,
-  onValue,
-} from 'https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js'
-
-const firebaseConfig = {
-  apiKey: 'AIzaSyC3sxf274LVPT_RTw-I5TS4N6c3YbaMql4',
-  authDomain: 'wexteras-8d3c3.firebaseapp.com',
-  databaseURL: 'https://wexteras-8d3c3-default-rtdb.europe-west1.firebasedatabase.app',
-  projectId: 'wexteras-8d3c3',
-  storageBucket: 'wexteras-8d3c3.firebasestorage.app',
-  messagingSenderId: '896283578937',
-  appId: '1:896283578937:web:cc315228718995ae7273e8',
+function logData(message) {
+  console.log(message)
 }
 
-const app = initializeApp(firebaseConfig)
-const db = getDatabase(app)
-
-const fanRef = ref(db, 'control/fan')
-//const pumpRef = ref(db, 'control/pump')
-const fanData = vueRef({})
-onMounted(() => {
-  // const pumpData = vueRef(null)
-
-  onValue(fanRef, (snapshot) => {
-    fanData.value = snapshot.val()
-    console.log(fanData.value.manualSpeed)
-    console.log(fanData.value.manualOverride)
-  })
+const data = useDatabaseObject(dbRef(db, 'control'))
+const fanData = defineModel({ default: 0 })
+watch(data, (newData) => {
+  if (newData && newData.fan) {
+    fanData.value = { ...newData.fan }
+  }
 })
+console.log(fanData.value)
+console.log('test')
+
+// Update firebase
+function fanDataUpdate(newValue) {
+  fanData.value.manualOverride = newValue
+  console.log('Update:', newValue)
+}
 </script>
 
 <style>
