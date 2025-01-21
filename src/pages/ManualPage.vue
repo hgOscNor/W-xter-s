@@ -7,9 +7,10 @@
       :inputValue="fanData?.manualSpeed || 0"
       :turnOnAtHumValue="fanData?.turnOnAtHum || 0"
       :turnOnAtTempValue="fanData?.turnOnAtTemp || 0"
-      @update:manualOverridevalue="fanDataUpdate"
       @updateManualOverride="logManualOverrideFan"
       @updateManualSpeed="logManualSpeedFan"
+      @updateTurnOnAtTemp="logTurnOnTempFan"
+      @updateTurnOnAtHum="logTurnOnHumFan"
     ></ControllerComp>
     <ControllerComp name="Pump"></ControllerComp>
   </div>
@@ -29,6 +30,8 @@ import { db } from 'src/boot/vuefire'
 // Ref
 const fanManualOverrideRef = dbRef(db, 'control/fan/manualOverride')
 const fanSpeedRef = dbRef(db, 'control/fan/manualSpeed')
+const fanTurnOnAtTempRef = dbRef(db, 'control/fan/turnOnAtTemp')
+const fanTurnOnAtHumRef = dbRef(db, 'control/fan/turnOnAtHum')
 
 function logManualOverrideFan(data) {
   set(fanManualOverrideRef, Boolean(data))
@@ -36,7 +39,14 @@ function logManualOverrideFan(data) {
 
 function logManualSpeedFan(data) {
   set(fanSpeedRef, Number(data))
+}
+
+function logTurnOnTempFan(data) {
   console.log(data)
+  set(fanTurnOnAtTempRef, Number(data))
+}
+function logTurnOnHumFan(data) {
+  set(fanTurnOnAtHumRef, Number(data))
 }
 
 const data = useDatabaseObject(dbRef(db, 'control'))
@@ -48,12 +58,6 @@ watch(data, (newData) => {
 })
 console.log(fanData.value)
 console.log('test')
-
-// Update firebase
-function fanDataUpdate(newValue) {
-  fanData.value.manualOverride = newValue
-  console.log('Update:', newValue)
-}
 </script>
 
 <style>

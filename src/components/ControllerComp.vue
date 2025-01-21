@@ -3,17 +3,24 @@
     <!-- namn på comp -->
     <h3>{{ props.name }}</h3>
 
-    <button @click="LogData">Log</button>
-
     <!-- turn on at ... -->
-    <input type="number" min="0" max="100" v-model="humTurnOnvalue" />
-    <input type="number" min="0" max="100" v-model="tempTurnOnvalue" />
+    <input
+      @update:model-value="logTempTurnOn"
+      type="number"
+      min="0"
+      max="100"
+      v-model="turnOnAtTempValue"
+    />
+    <input
+      @update:model-value="logHumTurnOn"
+      type="number"
+      min="0"
+      max="100"
+      v-model="turnOnAtHumValue"
+    />
+
     <!-- speed -->
     <h5>{{ inputValue }}</h5>
-
-    <!-- @update:model-value="LogData" -->
-
-    <!-- speed -->
     <div>
       <q-slider
         @change="logManualSpeed"
@@ -31,7 +38,12 @@
       @update:model-value="logManualOverride"
     />
     <!-- Absolut??? -->
-    <q-toggle size="xl" class="checkbox" v-model="manualOverrideValue" />
+    <q-toggle
+      size="xl"
+      class="checkbox"
+      v-model="manualOverrideValue"
+      :disable="!manualOverrideValue"
+    />
   </div>
 </template>
 
@@ -73,13 +85,24 @@ const manualOverrideValue = ref(props.manualOverrideValue)
 const turnOnAtHumValue = ref(props.turnOnAtHumValue)
 const turnOnAtTempValue = ref(props.turnOnAtTempValue)
 
-const emits = defineEmits(['updateManualOverride', 'updateManualSpeed'])
+const emits = defineEmits([
+  'updateManualOverride',
+  'updateManualSpeed',
+  'updateTurnOnAtTemp',
+  'updateTurnOnAtHum',
+])
 
 function logManualSpeed() {
   emits('updateManualSpeed', inputValue.value)
 }
 function logManualOverride() {
   emits('updateManualOverride', manualOverrideValue.value)
+}
+function logTempTurnOn() {
+  emits('updateTurnOnAtTemp', turnOnAtHumValue.value)
+}
+function logHumTurnOn() {
+  emits('updateTurnOnAtHum', turnOnAtTempValue.value)
 }
 
 watch(
@@ -93,8 +116,6 @@ watch(
   },
   { deep: true },
 )
-
-// S(inputValue, (newValue) => emit('manualSpeed', newValue))
 
 watch(inputValue, (val) => {
   if (val < 0 || val === isNaN() || val === undefined) {
@@ -126,6 +147,5 @@ input[type='number'] {
   justify-content: center;
   align-items: center;
   gap: 10%; */
-  background-color: green;
 }
 </style>
