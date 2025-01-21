@@ -9,6 +9,7 @@
       :turnOnAtTempValue="fanData?.turnOnAtTemp || 0"
       @update:manualOverridevalue="fanDataUpdate"
       @log="logData"
+      @updateManualOverride="logManualOverrideFan"
     ></ControllerComp>
     <ControllerComp name="Pump"></ControllerComp>
   </div>
@@ -21,12 +22,18 @@ import { /*ref as vueRef*/ /*onMounted,*/ watch } from 'vue'
 //Firebase
 import {} from /*useRouter*/ 'vue-router'
 import { useDatabaseObject } from 'vuefire'
-import { ref as dbRef /*push*/ } from 'firebase/database'
+import { ref as dbRef, set } from 'firebase/database'
 import { db } from 'src/boot/vuefire'
 // const router = useRouter()
 
+// Ref
+const fanManualOverrideRef = dbRef(db, 'control/fan/manualOverride')
+
 function logData(message) {
   console.log(message)
+}
+function logManualOverrideFan(data) {
+  set(fanManualOverrideRef, Boolean(data))
 }
 
 const data = useDatabaseObject(dbRef(db, 'control'))
