@@ -99,10 +99,10 @@ function logManualOverride() {
   emits('updateManualOverride', manualOverrideValue.value)
 }
 function logTempTurnOn() {
-  emits('updateTurnOnAtTemp', turnOnAtHumValue.value)
+  emits('updateTurnOnAtTemp', turnOnAtTempValue.value)
 }
 function logHumTurnOn() {
-  emits('updateTurnOnAtHum', turnOnAtTempValue.value)
+  emits('updateTurnOnAtHum', turnOnAtHumValue.value)
 }
 
 watch(

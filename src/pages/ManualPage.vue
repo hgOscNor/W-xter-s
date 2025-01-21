@@ -36,13 +36,10 @@ const fanTurnOnAtHumRef = dbRef(db, 'control/fan/turnOnAtHum')
 function logManualOverrideFan(data) {
   set(fanManualOverrideRef, Boolean(data))
 }
-
 function logManualSpeedFan(data) {
   set(fanSpeedRef, Number(data))
 }
-
 function logTurnOnTempFan(data) {
-  console.log(data)
   set(fanTurnOnAtTempRef, Number(data))
 }
 function logTurnOnHumFan(data) {
@@ -56,8 +53,6 @@ watch(data, (newData) => {
     fanData.value = { ...newData.fan }
   }
 })
-console.log(fanData.value)
-console.log('test')
 </script>
 
 <style>
