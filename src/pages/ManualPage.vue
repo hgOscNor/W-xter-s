@@ -1,24 +1,5 @@
 <template>
   <div class="controllerObj">
-<<<<<<< HEAD
-    <div class="controllerBox">
-      <ControllerComp
-        name="Fläktkontroller"
-        :isOnValue="fanData?.isOn || false"
-        :manualOverrideValue="fanData?.manualOverride || false"
-        :inputValue="fanData?.manualSpeed || 0"
-        :turnOnAtHumValue="fanData?.turnOnAtHum || 0"
-        :turnOnAtTempValue="fanData?.turnOnAtTemp || 0"
-        @updateManualOverride="logManualOverrideFan"
-        @updateManualSpeed="logManualSpeedFan"
-        @updateTurnOnAtTemp="logTurnOnTempFan"
-        @updateTurnOnAtHum="logTurnOnHumFan"
-      ></ControllerComp>
-    </div>
-    <div class="controllerBox">
-      <ControllerComp name="Pumpkontroller"></ControllerComp>
-    </div>
-=======
     <ControllerComp
       name="Fläkt kontroller"
       :isOnValue="fanData?.isOn || false"
@@ -71,10 +52,8 @@
       @updateTurnOnAtTemp="logTurnOnAtLights"
       @updateManualOn="logManualOnLights"
     ></ControllerComp>
->>>>>>> 64f03a59973dac0868283b645aefcc805554414c
   </div>
 </template>
-
 
 <script setup>
 import ControllerComp from '../components/ControllerComp.vue'
@@ -196,10 +175,10 @@ watch(data, (newData) => {
 <style>
 .controllerObj {
   display: flex;
-  justify-content: center; 
-  align-items: flex-start; 
-  flex-direction: row; 
-  gap: 15%; 
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: row;
+  gap: 15%;
 }
 
 .controllerBox {
