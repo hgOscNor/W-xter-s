@@ -36,8 +36,8 @@
         v-else
         size="xl"
         class="checkbox"
-        v-model="manualOverrideValue"
-        @update:model-value="inputValue"
+        v-model="openValue"
+        @update:model-value="logManualOpen"
       />
     </div>
     <!--Manual override  -->
@@ -51,8 +51,9 @@
     <q-toggle
       size="xl"
       class="checkbox"
-      v-model="manualOverrideValue"
+      v-model="manualOnValue"
       :disable="!manualOverrideValue"
+      @update:model-value="logManualOn"
     />
   </div>
 </template>
@@ -75,6 +76,7 @@ const props = defineProps({
     type: Boolean,
     default: null,
   },
+  manualOn: Boolean,
 })
 
 watch(
@@ -102,12 +104,15 @@ const manualOverrideValue = ref(props.manualOverrideValue)
 const turnOnAtHumValue = ref(props.turnOnAtHumValue)
 const turnOnAtTempValue = ref(props.turnOnAtTempValue)
 const openValue = ref(props.openValue)
+const manualOnValue = ref(props.manualOn)
 
 const emits = defineEmits([
   'updateManualOverride',
   'updateManualSpeed',
   'updateTurnOnAtTemp',
   'updateTurnOnAtHum',
+  'updateManualOn',
+  'updateManualOpen',
 ])
 
 function logManualSpeed() {
@@ -121,6 +126,12 @@ function logTempTurnOn() {
 }
 function logHumTurnOn() {
   emits('updateTurnOnAtHum', turnOnAtHumValue.value)
+}
+function logManualOn() {
+  emits('updateManualOn', manualOnValue.value)
+}
+function logManualOpen() {
+  emits('updateManualOpen', openValue.value)
 }
 
 watch(
