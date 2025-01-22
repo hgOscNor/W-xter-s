@@ -1,70 +1,74 @@
 <template>
   <div class="controllerObj">
-    <ControllerComp
-      name="Fläkt kontroller"
-      :isOnValue="fanData?.isOn || false"
-      :manualOverrideValue="fanData?.manualOverride || false"
-      :inputValue="fanData?.manualSpeed || 0"
-      :turnOnAtHumValue="fanData?.turnOnAtHum || 0"
-      :turnOnAtTempValue="fanData?.turnOnAtTemp || 0"
-      :manualOnValue="fan?.manualOn || false"
-      @updateManualOverride="logManualOverrideFan"
-      @updateManualSpeed="logManualSpeedFan"
-      @updateTurnOnAtTemp="logTurnOnTempFan"
-      @updateTurnOnAtHum="logTurnOnHumFan"
-      @updateManualOn="logManualOnFan"
-    ></ControllerComp>
-    <ControllerComp
-      name="Pump kontroller"
-      :isOnValue="pumpData?.isOn || false"
-      :manualOverrideValue="pumpData?.manualOverride || false"
-      :inputValue="pumpData?.manualSpeed || 0"
-      :turnOnAtHumValue="pumpData?.turnOnAtSoil || 0"
-      :manualOnValue="pump?.manualOn || false"
-      @updateManualOverride="logManualOverridePump"
-      @updateManualSpeed="logManualSpeedPump"
-      @updateTurnOnAtHum="logTurnOnSoilPump"
-      @updateManualOn="logManualOnPump"
-    ></ControllerComp>
-    <ControllerComp
-      name="Luck kontroller"
-      :isOnValue="trapdoorData?.isOn || false"
-      :manualOverrideValue="trapdoorData?.manualOverride || false"
-      :openValue="trapdoorData?.open || false"
-      :turnOnAtHumValue="trapdoorData?.turnOnAtHum || 0"
-      :turnOnAtTempValue="trapdoorData?.turnOnAtTemp || 0"
-      :manualOnValue="trapdoor?.manualOn || false"
-      :inputValue="null"
-      @updateManualOverride="logManualOverrideTrapdoor"
-      @updateManualOpen="logManualOpenTrapdoor"
-      @updateTurnOnAtTemp="logTurnOnTempTrapdoor"
-      @updateTurnOnAtHum="logTurnOnHumTrapdoor"
-      @updateManualOn="logManualOnTrapdoor"
-    ></ControllerComp>
-    <ControllerComp
-      name="Lamp kontroller"
-      :isOnValue="lights?.isOn || false"
-      :manualOverrideValue="lights?.manualOverride || false"
-      :turnOnAtHumValue="lights?.turnOnAt || 0"
-      :manualOnValue="lights?.manualOn || false"
-      @updateManualOverride="logManualOverrideLights"
-      @updateManualSpeed="logDimmer"
-      @updateTurnOnAtTemp="logTurnOnAtLights"
-      @updateManualOn="logManualOnLights"
-    ></ControllerComp>
+    <div class="controllerBox">
+      <ControllerComp
+        name="Fläkt kontroller"
+        :isOnValue="fanData?.isOn || false"
+        :manualOverrideValue="fanData?.manualOverride || false"
+        :inputValue="fanData?.manualSpeed || 0"
+        :turnOnAtHumValue="fanData?.turnOnAtHum || 0"
+        :turnOnAtTempValue="fanData?.turnOnAtTemp || 0"
+        :manualOnValue="fan?.manualOn || false"
+        @updateManualOverride="logManualOverrideFan"
+        @updateManualSpeed="logManualSpeedFan"
+        @updateTurnOnAtTemp="logTurnOnTempFan"
+        @updateTurnOnAtHum="logTurnOnHumFan"
+        @updateManualOn="logManualOnFan"
+      ></ControllerComp>
+    </div>
+    <div class="controllerBox">
+      <ControllerComp
+        name="Pump kontroller"
+        :isOnValue="pumpData?.isOn || false"
+        :manualOverrideValue="pumpData?.manualOverride || false"
+        :inputValue="pumpData?.manualSpeed || 0"
+        :turnOnAtHumValue="pumpData?.turnOnAtSoil || 0"
+        :manualOnValue="pump?.manualOn || false"
+        @updateManualOverride="logManualOverridePump"
+        @updateManualSpeed="logManualSpeedPump"
+        @updateTurnOnAtHum="logTurnOnSoilPump"
+        @updateManualOn="logManualOnPump"
+      ></ControllerComp>
+    </div>
+    <div class="controllerBox">
+      <ControllerComp
+        name="Luck kontroller"
+        :isOnValue="trapdoorData?.isOn || false"
+        :manualOverrideValue="trapdoorData?.manualOverride || false"
+        :openValue="trapdoorData?.open || false"
+        :turnOnAtHumValue="trapdoorData?.turnOnAtHum || 0"
+        :turnOnAtTempValue="trapdoorData?.turnOnAtTemp || 0"
+        :manualOnValue="trapdoor?.manualOn || false"
+        :inputValue="null"
+        @updateManualOverride="logManualOverrideTrapdoor"
+        @updateManualOpen="logManualOpenTrapdoor"
+        @updateTurnOnAtTemp="logTurnOnTempTrapdoor"
+        @updateTurnOnAtHum="logTurnOnHumTrapdoor"
+        @updateManualOn="logManualOnTrapdoor"
+      ></ControllerComp>
+    </div>
+    <div class="controllerBox">
+      <ControllerComp
+        name="Lamp kontroller"
+        :isOnValue="lights?.isOn || false"
+        :manualOverrideValue="lights?.manualOverride || false"
+        :turnOnAtHumValue="lights?.turnOnAt || 0"
+        :manualOnValue="lights?.manualOn || false"
+        @updateManualOverride="logManualOverrideLights"
+        @updateManualSpeed="logDimmer"
+        @updateTurnOnAtTemp="logTurnOnAtLights"
+        @updateManualOn="logManualOnLights"
+      ></ControllerComp>
+    </div>
   </div>
 </template>
 
 <script setup>
 import ControllerComp from '../components/ControllerComp.vue'
-import { ref as vueRef, /*onMounted,*/ watch } from 'vue'
-
-//Firebase
-import {} from /*useRouter*/ 'vue-router'
+import { ref as vueRef, watch } from 'vue'
 import { useDatabaseObject } from 'vuefire'
 import { ref as dbRef, set } from 'firebase/database'
 import { db } from 'src/boot/vuefire'
-// const router = useRouter()
 
 // Firebase
 //    Ref
@@ -157,36 +161,32 @@ const trapdoorData = vueRef()
 const lightsData = vueRef()
 
 watch(data, (newData) => {
-  if (newData && newData.fan) {
-    fanData.value = { ...newData.fan }
-  }
-  if (newData && newData.pump) {
-    pumpData.value = { ...newData.pump }
-  }
-  if (newData && newData.trapdoor) {
-    trapdoorData.value = { ...newData.trapdoor }
-  }
-  if (newData && newData.lights) {
-    lightsData.value = { ...newData.lights }
-  }
+  if (newData?.fan) fanData.value = { ...newData.fan }
+  if (newData?.pump) pumpData.value = { ...newData.pump }
+  if (newData?.trapdoor) trapdoorData.value = { ...newData.trapdoor }
+  if (newData?.lights) lightsData.value = { ...newData.lights }
 })
 </script>
 
 <style>
 .controllerObj {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: flex-start;
-  flex-direction: row;
-  gap: 15%;
+  flex-wrap: wrap;
+  gap: 0.1%;
+  row-gap: 40px;
+  padding: 2%;
 }
 
 .controllerBox {
-  margin-top: 0%;
-  width: 30%;
+  width: 40%;
+  height: 500px;
+  padding: 10px;
+  border-radius: 40px;
   border: 2px solid black;
-  padding: 1px;
-  display: flex;
-  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 </style>
