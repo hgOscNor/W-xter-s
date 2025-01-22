@@ -1,20 +1,25 @@
 <template>
   <div class="controllerObj">
-    <ControllerComp
-      name="Fläktkontroller"
-      :isOnValue="fanData?.isOn || false"
-      :manualOverrideValue="fanData?.manualOverride || false"
-      :inputValue="fanData?.manualSpeed || 0"
-      :turnOnAtHumValue="fanData?.turnOnAtHum || 0"
-      :turnOnAtTempValue="fanData?.turnOnAtTemp || 0"
-      @updateManualOverride="logManualOverrideFan"
-      @updateManualSpeed="logManualSpeedFan"
-      @updateTurnOnAtTemp="logTurnOnTempFan"
-      @updateTurnOnAtHum="logTurnOnHumFan"
-    ></ControllerComp>
-    <ControllerComp name="Pump"></ControllerComp>
+    <div class="controllerBox">
+      <ControllerComp
+        name="Fläktkontroller"
+        :isOnValue="fanData?.isOn || false"
+        :manualOverrideValue="fanData?.manualOverride || false"
+        :inputValue="fanData?.manualSpeed || 0"
+        :turnOnAtHumValue="fanData?.turnOnAtHum || 0"
+        :turnOnAtTempValue="fanData?.turnOnAtTemp || 0"
+        @updateManualOverride="logManualOverrideFan"
+        @updateManualSpeed="logManualSpeedFan"
+        @updateTurnOnAtTemp="logTurnOnTempFan"
+        @updateTurnOnAtHum="logTurnOnHumFan"
+      ></ControllerComp>
+    </div>
+    <div class="controllerBox">
+      <ControllerComp name="Pumpkontroller"></ControllerComp>
+    </div>
   </div>
 </template>
+
 
 <script setup>
 import ControllerComp from '../components/ControllerComp.vue'
@@ -63,9 +68,18 @@ console.log('test')
 <style>
 .controllerObj {
   display: flex;
+  justify-content: center; 
+  align-items: flex-start; 
+  flex-direction: row; 
+  gap: 15%; 
+}
+
+.controllerBox {
+  margin-top: 0%;
+  width: 30%;
+  border: 2px solid black;
+  padding: 1px;
+  display: flex;
   justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  flex-wrap: nowrap;
 }
 </style>
