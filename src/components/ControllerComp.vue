@@ -5,6 +5,7 @@
 
     <!-- turn on at ... -->
     <input
+      v-if="turnOnAtTempValue !== null"
       @update:model-value="logTempTurnOn"
       type="number"
       min="0"
@@ -12,6 +13,7 @@
       v-model="turnOnAtTempValue"
     />
     <input
+      v-if="turnOnAtHumValue !== null"
       @update:model-value="logHumTurnOn"
       type="number"
       min="0"
@@ -23,11 +25,19 @@
     <h5>{{ inputValue }}</h5>
     <div>
       <q-slider
+        v-if="inputValue !== null"
         @change="logManualSpeed"
         v-model.lazy.number="inputValue"
         :min="0"
         :max="100"
         :step="1"
+      />
+      <q-toggle
+        v-else
+        size="xl"
+        class="checkbox"
+        v-model="manualOverrideValue"
+        @update:model-value="inputValue"
       />
     </div>
     <!--Manual override  -->
@@ -57,7 +67,14 @@ const props = defineProps({
   inputValue: Number,
   manualOverrideValue: Boolean,
   turnOnAtHumValue: Number,
-  turnOnAtTempValue: Number,
+  turnOnAtTempValue: {
+    type: Number,
+    default: null,
+  },
+  openValue: {
+    type: Boolean,
+    default: null,
+  },
 })
 
 watch(
@@ -84,6 +101,7 @@ const inputValue = ref(props.inputValue)
 const manualOverrideValue = ref(props.manualOverrideValue)
 const turnOnAtHumValue = ref(props.turnOnAtHumValue)
 const turnOnAtTempValue = ref(props.turnOnAtTempValue)
+const openValue = ref(props.openValue)
 
 const emits = defineEmits([
   'updateManualOverride',
@@ -113,6 +131,7 @@ watch(
     manualOverrideValue.value = newProps.manualOverrideValue
     turnOnAtHumValue.value = newProps.turnOnAtHumValue
     turnOnAtTempValue.value = newProps.turnOnAtTempValue
+    openValue.value = newProps.openValue
   },
   { deep: true },
 )
