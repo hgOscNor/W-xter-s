@@ -22,3 +22,9 @@ export default defineBoot(async ({ app }) => {
 })
 
 export { db }
+
+// import VueApexCharts from 'vue3-apexcharts'
+
+// const apexchartApp = createApp(App)
+// apexchartApp.use(VueApexCharts)
+// // The app.use(VueApexCharts) will make <apexchart> component available everywhere.
