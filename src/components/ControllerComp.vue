@@ -1,22 +1,60 @@
 <template>
   <div class="inputDiv">
+    <!-- namn på comp -->
     <h3>{{ props.name }}</h3>
 
+    <!-- turn on at ... -->
     <input
+      v-if="turnOnAtTempValue !== null"
+      @update:model-value="logTempTurnOn"
       type="number"
       min="0"
       max="100"
-      v-model="humTurnOn"
-      @input="emitUpdate('turnOnAtHum', turnOnAtHum)"
+      v-model="turnOnAtTempValue"
     />
-    <input type="number" min="0" max="100" v-model="tempTurnOn" />
-    <input type="number" min="0" max="100" v-model="inputValue" />
+    <input
+      v-if="turnOnAtHumValue !== null"
+      @update:model-value="logHumTurnOn"
+      type="number"
+      min="0"
+      max="100"
+      v-model="turnOnAtHumValue"
+    />
 
+    <!-- speed -->
+    <h5>{{ inputValue }}</h5>
     <div>
-      <q-slider v-model.lazy.number="inputValue" :min="0" :max="100" :step="1" />
+      <q-slider
+        v-if="inputValue !== null"
+        @change="logManualSpeed"
+        v-model.lazy.number="inputValue"
+        :min="0"
+        :max="100"
+        :step="1"
+      />
+      <q-toggle
+        v-else
+        size="xl"
+        class="checkbox"
+        v-model="openValue"
+        @update:model-value="logManualOpen"
+      />
     </div>
-
-    <q-toggle size="xl" class="checkbox" v-model="checkbox" />
+    <!--Manual override  -->
+    <q-toggle
+      size="xl"
+      class="checkbox"
+      v-model="manualOverrideValue"
+      @update:model-value="logManualOverride"
+    />
+    <!-- Absolut??? -->
+    <q-toggle
+      size="xl"
+      class="checkbox"
+      v-model="manualOnValue"
+      :disable="!manualOverrideValue"
+      @update:model-value="logManualOn"
+    />
   </div>
 </template>
 
@@ -26,11 +64,19 @@ import { ref, watch } from 'vue'
 //Props
 const props = defineProps({
   name: String,
-  isOn: Boolean,
-  startupValInt: Number,
-  startupValBool: Boolean,
-  turnOnAtHum: Number,
-  turnOnAtTemp: Number,
+  isOnValue: Boolean,
+  inputValue: Number,
+  manualOverrideValue: Boolean,
+  turnOnAtHumValue: Number,
+  turnOnAtTempValue: {
+    type: Number,
+    default: null,
+  },
+  openValue: {
+    type: Boolean,
+    default: null,
+  },
+  manualOn: Boolean,
 })
 
 watch(
@@ -42,35 +88,64 @@ watch(
 watch(
   () => props.startupValBool,
   (newValue) => {
-    checkbox.value = newValue
+    manualOverrideValue.value = newValue
   },
 )
 watch(
   () => props.turnOnAtHum,
   (newValue) => {
-    checkbox.value = newValue
+    manualOverrideValue.value = newValue
   },
 )
 
-const inputValue = ref(props.startupValInt)
-const checkbox = ref(props.startupValBool)
-const humTurnOn = ref(props.turnOnAtHum)
-const tempTurnOn = ref(props.turnOnAtTemp)
+const isOnValue = ref(props.isOnValue)
+const inputValue = ref(props.inputValue)
+const manualOverrideValue = ref(props.manualOverrideValue)
+const turnOnAtHumValue = ref(props.turnOnAtHumValue)
+const turnOnAtTempValue = ref(props.turnOnAtTempValue)
+const openValue = ref(props.openValue)
+const manualOnValue = ref(props.manualOn)
 
-// Emits
-const emit = defineEmits([
-  'update:isOn',
-  'update:startupValInt',
-  'update:startupValBool',
-  'update:turnOnAtHum',
-  'update:turnOnAtTemp',
+const emits = defineEmits([
+  'updateManualOverride',
+  'updateManualSpeed',
+  'updateTurnOnAtTemp',
+  'updateTurnOnAtHum',
+  'updateManualOn',
+  'updateManualOpen',
 ])
 
-watch(inputValue, (newValue) => emit('update:startupValInt', newValue))
+function logManualSpeed() {
+  emits('updateManualSpeed', inputValue.value)
+}
+function logManualOverride() {
+  emits('updateManualOverride', manualOverrideValue.value)
+}
+function logTempTurnOn() {
+  emits('updateTurnOnAtTemp', turnOnAtTempValue.value)
+}
+function logHumTurnOn() {
+  emits('updateTurnOnAtHum', turnOnAtHumValue.value)
+}
+function logManualOn() {
+  emits('updateManualOn', manualOnValue.value)
+}
+function logManualOpen() {
+  emits('updateManualOpen', openValue.value)
+}
 
-watch(checkbox, (val) => {
-  console.log(val)
-})
+watch(
+  () => props,
+  (newProps) => {
+    isOnValue.value = newProps.isOnValue
+    inputValue.value = newProps.inputValue
+    manualOverrideValue.value = newProps.manualOverrideValue
+    turnOnAtHumValue.value = newProps.turnOnAtHumValue
+    turnOnAtTempValue.value = newProps.turnOnAtTempValue
+    openValue.value = newProps.openValue
+  },
+  { deep: true },
+)
 
 watch(inputValue, (val) => {
   if (val < 0 || val === isNaN() || val === undefined) {
@@ -96,11 +171,11 @@ input[type='number'] {
   transition-duration: 0.2ms;
 }
 
-/* .inputDiv {
-  display: flex;
+.inputDiv {
+  /* display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 10%;
-} */
+  gap: 10%; */ 
+} 
 </style>
