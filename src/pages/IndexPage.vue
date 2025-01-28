@@ -1,12 +1,10 @@
 <template>
-  <HeaderComp></HeaderComp>
   <q-btn :to="'/Manual'">Manual</q-btn>
-  <!-- <ChartsComp></ChartsComp> -->
+  <ChartsComp></ChartsComp>
 </template>
 
 <script setup>
-// import ChartsComp from 'src/components/ChartsComp.vue'
-
+import ChartsComp from 'src/components/ChartsComp.vue'
 //
 //import { Vue /*ref as vueRef,*/ /*onMounted,*/ /*watch*/ } from 'vue'
 

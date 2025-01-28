@@ -16,15 +16,7 @@ const firebaseApp = initializeApp({
 const db = getDatabase(firebaseApp)
 
 export default defineBoot(async ({ app }) => {
-  app.use(VueFire, {
-    firebaseApp,
-  })
+  app.use(VueFire, { firebaseApp })
 })
 
 export { db }
-
-// import VueApexCharts from 'vue3-apexcharts'
-
-// const apexchartApp = createApp(App)
-// apexchartApp.use(VueApexCharts)
-// // The app.use(VueApexCharts) will make <apexchart> component available everywhere.

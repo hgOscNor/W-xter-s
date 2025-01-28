@@ -28,7 +28,7 @@
         v-if="inputValue !== null"
         @change="logManualSpeed"
         v-model.lazy.number="inputValue"
-        :min="0"
+        :min="1"
         :max="100"
         :step="1"
       />
