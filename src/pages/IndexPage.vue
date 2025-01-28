@@ -7,6 +7,7 @@
 <script setup>
 import ChartsComp from 'src/components/ChartsComp.vue'
 import HeaderComp from 'src/components/HeaderComp.vue'
+// import ChartsComp from 'src/components/ChartsComp.vue'
 
 //
 //import { Vue /*ref as vueRef,*/ /*onMounted,*/ /*watch*/ } from 'vue'
