@@ -6,21 +6,38 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { Chart } from 'chart.js'
+import {
+  Chart,
+  LineController,
+  LineElement,
+  PointElement,
+  LinearScale,
+  Filler,
+  Title,
+  CategoryScale,
+} from 'chart.js'
+
+// Props
+// const props = defineProps({
+//   name: String,
+// })
+
+// Registrera moduler
+Chart.register(LineController, LineElement, PointElement, LinearScale, Title, Filler, CategoryScale)
 
 const lineChart = ref(null) // Referens till canvas-elementet
 
 onMounted(() => {
   // Data och inställningar för linjediagrammet
   const data = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'], // X-axelns etiketter
+    labels: [], // X-axelns etiketter
     datasets: [
       {
         label: 'My First Dataset',
-        data: [65, 59, 80, 81, 56, 55, 40], // Datapunkter
-        fill: true, // Ingen bakgrundsfyllning
-        borderColor: 'rgb(75, 192, 192)', // Linjens färg
-        tension: 0.1, // Gör linjen mjukt kurvig
+        data: [65, 59, 80, 81, 56, 55, 40],
+        fill: true,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1,
       },
     ],
   }
@@ -36,7 +53,7 @@ onMounted(() => {
         },
         title: {
           display: true,
-          text: 'Line Chart Example',
+          text: '',
         },
       },
     },
