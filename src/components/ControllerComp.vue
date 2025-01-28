@@ -28,7 +28,7 @@
         v-if="inputValue !== null"
         @change="logManualSpeed"
         v-model.lazy.number="inputValue"
-        :min="0"
+        :min="1"
         :max="100"
         :step="1"
       />
@@ -176,6 +176,6 @@ input[type='number'] {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 10%; */ 
-} 
+  gap: 10%; */
+}
 </style>
