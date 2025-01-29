@@ -5,8 +5,8 @@
   </div>
 </template>
 
-<script setup> 
-import { ref, onMounted } from 'vue'
+<script setup>
+import { ref, onMounted, watch } from 'vue'
 import {
   Chart,
   LineController,
@@ -16,51 +16,106 @@ import {
   Filler,
   Title,
   CategoryScale,
-}  from 'chart.js' 
+  scales,
+  Tooltip,
+  Legend,
+} from 'chart.js'
+import 'chartjs-adapter-date-fns'
 
 // Props
-// const props = defineProps({
-//   name: String,
-// })
+const props = defineProps({
+  name: String,
+  lineColor: String,
+  dataX: {
+    type: Array,
+  },
+  dataY: {
+    type: Array,
+  },
+  graphMin: Number,
+  graphMax: Number,
+})
 
 // Registrera moduler
-Chart.register(LineController, LineElement, PointElement, LinearScale, Title, Filler, CategoryScale)
-
+Chart.register(
+  LineController,
+  LineElement,
+  PointElement,
+  LinearScale,
+  Title,
+  Filler,
+  CategoryScale,
+  scales,
+  Tooltip,
+  Legend,
+)
 const lineChart = ref(null) // Referens till canvas-elementet
+let chartInstance = null
 
 onMounted(() => {
-  // Data och inställningar för linjediagrammet
-  const data = {
-    labels: [1, 2, 3], // X-axelns etiketter
-    datasets: [
-      {
-        label: 'My First Dataset',
-        data: [65, 59, 80, 81, 56, 55, 40],
-        fill: true,
-        borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1,
-      },
-    ],
+  if (chartInstance) {
+    chartInstance.destroy()
   }
 
-  const config = {
-    type: 'line', // Typ av diagram
-    data: data,
+  chartInstance = new Chart(lineChart.value, {
+    type: 'line',
+    data: {
+      labels: props.dataX,
+      datasets: [
+        {
+          data: props.dataY,
+          fill: true,
+          borderColor: props.lineColor,
+          tension: 0.1,
+        },
+      ],
+    },
     options: {
+      scales: {
+        x: {
+          type: 'time',
+          time: {
+            unit: 'minute',
+            tooltipFormat: 'yyyy-MM-dd HH:mm',
+            displayFormats: {
+              minute: 'HH:mm',
+              hour: 'HH:mm',
+              day: 'MMM dd',
+            },
+          },
+        },
+
+        y: {
+          suggestedMin: Number(props.graphMin),
+          suggestedMax: Number(props.graphMax),
+        },
+      },
       responsive: true,
       plugins: {
-        legend: {
-          position: 'top',
-        },
+        legend: false,
         title: {
           display: true,
-          text: '',
+          text: props.name,
+        },
+        interaction: {
+          mode: 'index',
+          intersect: false,
+        },
+        tooltip: {
+          enabled: true,
+          mode: 'index',
+          intersect: false,
         },
       },
     },
-  }
+  })
+})
 
-  // Skapa diagrammet
-  new Chart(lineChart.value, config)
+watch([() => props.dataX, () => props.dataY], () => {
+  if (chartInstance) {
+    chartInstance.data.labels = props.dataX
+    chartInstance.data.datasets[0].data = props.dataY
+    chartInstance.update()
+  }
 })
 </script>
