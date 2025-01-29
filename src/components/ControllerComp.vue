@@ -1,62 +1,72 @@
 <template>
   <div class="inputDiv">
-    <!-- namn på comp -->
+    <!-- Titel -->
     <h3>{{ props.name }}</h3>
+    
+    <!--Numberboxar -->
+    <div class="numberBox-section">
+      <input
+        v-if="turnOnAtTempValue !== null"
+        @update:model-value="logTempTurnOn"
+        type="number"
+        min="1" 
+        max="100"
+        v-model="turnOnAtTempValue"
+      />
+      <input
+        v-if="turnOnAtHumValue !== null"
+        @update:model-value="logHumTurnOn"
+        type="number"
+        min="1"
+        max="100"
+        v-model="turnOnAtHumValue"
+      />
+    </div>
 
-    <!-- turn on at ... -->
-    <input
-      v-if="turnOnAtTempValue !== null"
-      @update:model-value="logTempTurnOn"
-      type="number"
-      min="0"
-      max="100"
-      v-model="turnOnAtTempValue"
-    />
-    <input
-      v-if="turnOnAtHumValue !== null"
-      @update:model-value="logHumTurnOn"
-      type="number"
-      min="0"
-      max="100"
-      v-model="turnOnAtHumValue"
-    />
-
-    <!-- speed -->
+    
     <h5>{{ inputValue }}</h5>
-    <div>
+
+    <!-- Sliders -->
+    <div class="slider-section"></div>
       <q-slider
         v-if="inputValue !== null"
         @change="logManualSpeed"
         v-model.lazy.number="inputValue"
-        :min="0"
+        :min="1"
         :max="100"
         :step="1"
+        color="green-10"
       />
+    </div>
+
+    <!-- Checkboxar -->
+    <div class="checkBox-section">
       <q-toggle
-        v-else
+        v-if="openValue !== null"
         size="xl"
         class="checkbox"
+        color="green-10"
         v-model="openValue"
         @update:model-value="logManualOpen"
       />
+      <q-toggle
+        size="xl"
+        class="checkbox"
+        color="green-10"
+        v-model="manualOverrideValue"
+        @update:model-value="logManualOverride"
+      />
+      <q-toggle
+        size="xl"
+        class="checkbox"
+        color="green-10"
+        v-model="manualOnValue"
+        :disable="!manualOverrideValue"
+        @update:model-value="logManualOn"
+      />
     </div>
-    <!--Manual override  -->
-    <q-toggle
-      size="xl"
-      class="checkbox"
-      v-model="manualOverrideValue"
-      @update:model-value="logManualOverride"
-    />
-    <!-- Absolut??? -->
-    <q-toggle
-      size="xl"
-      class="checkbox"
-      v-model="manualOnValue"
-      :disable="!manualOverrideValue"
-      @update:model-value="logManualOn"
-    />
-  </div>
 </template>
+
 
 <script setup>
 import { ref, watch } from 'vue'
@@ -171,11 +181,20 @@ input[type='number'] {
   transition-duration: 0.2ms;
 }
 
-.inputDiv {
-  /* display: flex;
+/*
+    .inputDiv {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10%;  
+    } */
+/* .inputDiv {
+   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 10%; */ 
+  gap: 10%; 
 } 
+*/
 </style>

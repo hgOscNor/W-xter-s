@@ -1,32 +1,132 @@
+
 <template>
-  <!-- <div>
-    <apexchart width="500" type="line" :options="options" :series="series"></apexchart>
-  </div> -->
-  <div></div>
+  <div>
+    <canvas ref="lineChart"></canvas>
+  </div>
 </template>
 
 <script setup>
-// import VueApexCharts from 'vue3-apexcharts'
+import { ref, onMounted, watch } from 'vue'
+import {
+  Chart,
+  LineController,
+  LineElement,
+  PointElement,
+  LinearScale,
+  Filler,
+  Title,
+  CategoryScale,
+  scales,
+  Tooltip,
+  Legend,
+} from 'chart.js'
+import 'chartjs-adapter-date-fns'
 
-// var app = new Vue({
-//   el: '#appl',
-//   data: function () {
-//     return {
-//       options: {
-//         chart: {
-//           id: 'vuechart-example',
-//         },
-//         xaxis: {
-//           categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998],
-//         },
-//       },
-//       series: [
-//         {
-//           name: 'series-1',
-//           data: [30, 40, 45, 50, 49, 60, 70, 91],
-//         },
-//       ],
-//     }
-//   },
-// })
+// Props
+
+const props = defineProps({
+  name: String,
+  lineColor: String,
+  dataX: {
+    type: Array,
+  },
+  dataY: {
+    type: Array,
+  },
+  graphMin: Number,
+  graphMax: Number,
+})
+
+// Registrera moduler
+Chart.register(
+  LineController,
+  LineElement,
+  PointElement,
+  LinearScale,
+  Title,
+  Filler,
+  CategoryScale,
+  scales,
+  Tooltip,
+  Legend,
+)
+
+const lineChart = ref(null)
+let chartInstance = null
+
+onMounted(() => {
+  if (chartInstance) {
+    chartInstance.destroy()
+  }
+  console.log(props.dataX)
+
+  chartInstance = new Chart(lineChart.value, {
+    type: 'line',
+    data: {
+      labels: props.dataX.map((dateStr) => {
+        const date = new Date(dateStr)
+        date.setHours(date.getHours() - 1)
+        return date
+      }),
+      datasets: [
+        {
+          data: props.dataY,
+          fill: true,
+          borderColor: props.lineColor,
+          tension: 0.1,
+        },
+      ],
+    },
+    options: {
+      scales: {
+        x: {
+          type: 'time',
+          time: {
+            unit: 'minute',
+            tooltipFormat: 'yyyy-MM-dd HH:mm:',
+            displayFormats: {
+              minute: 'HH:mm',
+              hour: 'HH:mm',
+              day: 'MMM dd',
+            },
+          },
+        },
+
+        y: {
+          suggestedMin: Number(props.graphMin),
+          suggestedMax: Number(props.graphMax),
+        },
+      },
+      responsive: true,
+      plugins: {
+        legend: false,
+        title: {
+          display: true,
+          text: props.name,
+        },
+        interaction: {
+          mode: 'index',
+          intersect: false,
+        },
+        tooltip: {
+          enabled: true,
+          mode: 'index',
+          intersect: false,
+        },
+      },
+    },
+  })
+})
+
+watch([() => props.dataX, () => props.dataY], () => {
+  if (chartInstance) {
+    chartInstance.data.labels = props.dataX.map((dateStr) => {
+      const date = new Date(dateStr)
+      date.setHours(date.getHours() - 1)
+      return date
+    })
+    chartInstance.data.datasets[0].data = props.dataY
+    chartInstance.update()
+  }
+})
 </script>
