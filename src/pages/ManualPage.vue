@@ -1,6 +1,6 @@
 <template>
-  <div class="controllerObj">
-    <div class="controllerBox">
+  <div class="controlPanel">
+    <div class="fläktKontroller">
       <ControllerComp
         name="Fläkt kontroller"
         :isOnValue="fanData?.isOn || false"
@@ -16,7 +16,8 @@
         @updateManualOn="logManualOnFan"
       ></ControllerComp>
     </div>
-    <div class="controllerBox">
+
+    <div class="pumpKontroller">
       <ControllerComp
         name="Pump kontroller"
         :isOnValue="pumpData?.isOn || false"
@@ -30,7 +31,8 @@
         @updateManualOn="logManualOnPump"
       ></ControllerComp>
     </div>
-    <div class="controllerBox">
+
+    <div class="luckKontroller">
       <ControllerComp
         name="Luck kontroller"
         :isOnValue="trapdoorData?.isOn || false"
@@ -47,7 +49,8 @@
         @updateManualOn="logManualOnTrapdoor"
       ></ControllerComp>
     </div>
-    <div class="controllerBox">
+
+    <div class="lampKontroller">
       <ControllerComp
         name="Lamp kontroller"
         :isOnValue="lightsData?.isOn || false"
@@ -170,7 +173,7 @@ watch(data, (newData) => {
 </script>
 
 <style>
-.controllerObj {
+.controlPanel {
   display: flex;
   justify-content: space-around;
   align-items: flex-start;
@@ -180,14 +183,45 @@ watch(data, (newData) => {
   padding: 2%;
 }
 
-.controllerBox {
+.fläktKontroller {
   width: 40%;
   height: 500px;
-  padding: 10px;
+  padding: 25px;
   border-radius: 40px;
   border: 2px solid black;
-  flex-direction: column;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  background-color: #4caf50;
 }
+.pumpKontroller {
+  width: 40%;
+  height: 500px;
+  padding: 25px;
+  border-radius: 40px;
+  border: 2px solid black;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  background-color: #4caf50;
+}
+.luckKontroller {
+  width: 40%;
+  height: 500px;
+  padding: 25px;
+  border-radius: 40px;
+  border: 2px solid black;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  background-color: #4caf50;
+}
+.lampKontroller {
+  width: 40%;
+  height: 500px;
+  padding: 25px;
+  border-radius: 40px;
+  border: 2px solid black;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  background-color: #4caf50;
+}
+
 </style>

@@ -1,10 +1,11 @@
+
 <template>
   <div>
     <canvas ref="lineChart"></canvas>
   </div>
 </template>
 
-<script setup>
+<script setup> 
 import { ref, onMounted } from 'vue'
 import {
   Chart,
@@ -15,7 +16,7 @@ import {
   Filler,
   Title,
   CategoryScale,
-} from 'chart.js'
+}  from 'chart.js' 
 
 // Props
 // const props = defineProps({
@@ -30,7 +31,7 @@ const lineChart = ref(null) // Referens till canvas-elementet
 onMounted(() => {
   // Data och inställningar för linjediagrammet
   const data = {
-    labels: [], // X-axelns etiketter
+    labels: [1, 2, 3], // X-axelns etiketter
     datasets: [
       {
         label: 'My First Dataset',
