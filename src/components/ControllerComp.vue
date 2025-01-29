@@ -12,6 +12,7 @@
       max="100"
       v-model="turnOnAtTempValue"
     />
+
     <input
       v-if="turnOnAtHumValue !== null"
       @update:model-value="logHumTurnOn"
@@ -171,11 +172,12 @@ input[type='number'] {
   transition-duration: 0.2ms;
 }
 
-.inputDiv {
-  /* display: flex;
+/* .inputDiv {
+   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 10%; */
-}
+  gap: 10%; 
+} 
+*/
 </style>

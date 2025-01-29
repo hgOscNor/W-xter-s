@@ -3,7 +3,7 @@
     <!-- HEADER -->
     <q-header elevated class="bg-green text-white">
       <div class="q-pa-md">
-        <q-tabs v-model="tab" class="text-white" align="center" style="height: 55px">
+        <q-tabs v-model="tab" class="text-white" align="center">
           <q-tab
             name="Hem"
             icon="img:https://www.hitachigymnasiet.se/wp-content/uploads/2023/09/logoMark.svg"
