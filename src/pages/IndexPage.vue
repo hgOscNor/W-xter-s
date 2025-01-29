@@ -64,7 +64,7 @@ const lightData = useDatabaseObject(query(dbRef(db, 'sensor/light'), limitToLast
 watch(tempData, (newdata) => {
   if (newdata) {
     const timestamps = Object.keys(newdata).sort()
-    const values = timestamps.map((timestamp) => newdata[timestamp]?.C || newdata[timestamp]?.C)
+    const values = timestamps.map((timestamp) => newdata[timestamp]?.C)
     tempDataX.value = timestamps
     tempDataY.value = values
   }
@@ -72,9 +72,8 @@ watch(tempData, (newdata) => {
 watch(humData, (newdata) => {
   if (newdata) {
     const timestamps = Object.keys(newdata).sort()
-    const values = timestamps.map(
-      (timestamp) => newdata[timestamp]?.moist || newdata[timestamp]?.moist,
-    )
+    const values = timestamps.map((timestamp) => newdata[timestamp]?.moist)
+
     humDataX.value = timestamps
     humDataY.value = values
   }
@@ -82,9 +81,7 @@ watch(humData, (newdata) => {
 watch(earthData, (newdata) => {
   if (newdata) {
     const timestamps = Object.keys(newdata).sort()
-    const values = timestamps.map(
-      (timestamp) => newdata[timestamp]?.soil || newdata[timestamp]?.soil,
-    )
+    const values = timestamps.map((timestamp) => newdata[timestamp]?.soil)
     earthDataX.value = timestamps
     earthDataY.value = values
   }
@@ -92,9 +89,7 @@ watch(earthData, (newdata) => {
 watch(lightData, (newdata) => {
   if (newdata) {
     const timestamps = Object.keys(newdata).sort()
-    const values = timestamps.map(
-      (timestamp) => newdata[timestamp]?.light || newdata[timestamp]?.light,
-    )
+    const values = timestamps.map((timestamp) => newdata[timestamp]?.light)
     lightDataX.value = timestamps
     lightDataY.value = values
   }
