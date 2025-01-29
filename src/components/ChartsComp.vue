@@ -23,6 +23,7 @@ import {
 import 'chartjs-adapter-date-fns'
 
 // Props
+
 const props = defineProps({
   name: String,
   lineColor: String,
@@ -49,18 +50,24 @@ Chart.register(
   Tooltip,
   Legend,
 )
-const lineChart = ref(null) // Referens till canvas-elementet
+
+const lineChart = ref(null)
 let chartInstance = null
 
 onMounted(() => {
   if (chartInstance) {
     chartInstance.destroy()
   }
+  console.log(props.dataX)
 
   chartInstance = new Chart(lineChart.value, {
     type: 'line',
     data: {
-      labels: props.dataX,
+      labels: props.dataX.map((dateStr) => {
+        const date = new Date(dateStr)
+        date.setHours(date.getHours() - 1)
+        return date
+      }),
       datasets: [
         {
           data: props.dataY,
@@ -76,7 +83,7 @@ onMounted(() => {
           type: 'time',
           time: {
             unit: 'minute',
-            tooltipFormat: 'yyyy-MM-dd HH:mm',
+            tooltipFormat: 'yyyy-MM-dd HH:mm:',
             displayFormats: {
               minute: 'HH:mm',
               hour: 'HH:mm',
@@ -113,7 +120,11 @@ onMounted(() => {
 
 watch([() => props.dataX, () => props.dataY], () => {
   if (chartInstance) {
-    chartInstance.data.labels = props.dataX
+    chartInstance.data.labels = props.dataX.map((dateStr) => {
+      const date = new Date(dateStr)
+      date.setHours(date.getHours() - 1)
+      return date
+    })
     chartInstance.data.datasets[0].data = props.dataY
     chartInstance.update()
   }
