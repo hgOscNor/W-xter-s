@@ -79,8 +79,6 @@ void firebaseFetch()
   fanManualOverride = firebaseData.boolData();
   Firebase.getInt(firebaseData, "control/fan/manualSpeed");
   fanManualSpeed = map(firebaseData.intData(), 0, 100, 200, 1024);
-  Serial.print("Fan manual speed: ");
-  Serial.println(fanManualSpeed);
   Firebase.getInt(firebaseData, "control/fan/turnOnAtHum");
   fanTurnOnAtHum = firebaseData.intData();
   Firebase.getInt(firebaseData, "control/fan/turnOnAtTemp");
@@ -190,14 +188,6 @@ int calculateAverage(const int numberOfValuesInAverage, const int Values[])
   return sum / numberOfValuesInAverage;
 }
 
-// void shiftArrayRight(int array[], const int size)
-// {
-//   for (int i = size - 1; i > 0; i--)
-//   {
-//     array[i] = array[i - 1];
-//   }
-// }
-
 int readEarthSensor()
 {
   int rawSensorValue = analogRead(earthSensorPin);
@@ -205,30 +195,9 @@ int readEarthSensor()
   return value;
 }
 
-// int earthInterupt(const int latestEarthValue)
-// {
-//   // shiftArrayRight(earthArray, numberOfValuesInAvrege);
-//   // earthArray[0] = latestEarthValue;
-//   return earthArray[0];
-// }
-
-// int humInterupt(const int latestHumValue)
-// {
-//   shiftArrayRight(humArray, numberOfValuesInAvrege);
-//   humArray[0] = latestHumValue;
-//   return humArray[0];
-// }
-
-// int tempInterupt(const int latestTempValue)
-// {
-//   shiftArrayRight(tempArray, numberOfValuesInAvrege);
-//   tempArray[0] = latestTempValue;
-//   return tempArray[0];
-// }
-
-bool triggerEarthInterupt(const int latestEarthValue, const int earthHist, const int interuptAt)
+bool triggerInterrupt(const int latestValue, const int hist, const int interuptAt)
 {
-  if (abs(latestEarthValue - earthHist) >= interuptAt)
+  if (abs(latestValue - hist) >= interuptAt)
   {
     return true;
   }
@@ -362,17 +331,24 @@ void turnFanOff()
 
 void openTrapdoor()
 {
-if (trapdoorIsOpen == false)
-  {  
+if (!trapdoorIsOpen)
+  { 
+    if (trapdoorManualOverride && !trapdoorManualOn)
+    {
+      return;
+    }
+    else
+    {
     servo.write(90);
     trapdoorIsOpen = true;
     Firebase.setBool(firebaseData, "control/trapdoor/open", trapdoorIsOpen);
+    }
   }
 }
 
 void closeTrapdoor()
 {
-  if (trapdoorIsOpen == true)
+  if (trapdoorIsOpen)
   { 
     if (fanIsOn == false)
     {
@@ -427,11 +403,10 @@ void trapdoor()
 }
 
 void earthLoop() {
-  if (triggerEarthInterupt(earthValue, earthHist, earthInteruptAt))
+  if (triggerInterrupt(earthValue, earthHist, earthInteruptAt))
   {
     digitalWrite(LED_BUILTIN, HIGH);
     updateTime();
-    // shiftArrayRight(earthArray, numberOfValuesInAvrege);
     earthHist = earthValue;
     firebaseUpload(DataType::earth);
     digitalWrite(LED_BUILTIN, LOW);
@@ -439,11 +414,10 @@ void earthLoop() {
 }
 
 void humLoop() {
-  if (triggerHumInterupt(humValue, humHist, humInteruptAt))
+  if (triggerInterrupt(humValue, humHist, humInteruptAt))
   {
     digitalWrite(LED_BUILTIN, HIGH);
     updateTime();
-    // shiftArrayRight(humArray, numberOfValuesInAvrege);
     humHist = humValue;
     firebaseUpload(DataType::hum);
     digitalWrite(LED_BUILTIN, LOW);
@@ -451,11 +425,10 @@ void humLoop() {
 }
 
 void tempLoop() {
-  if (triggerTempInterupt(tempValue, tempHist, tempInteruptAt))
+  if (triggerInterrupt(tempValue, tempHist, tempInteruptAt))
   {
     digitalWrite(LED_BUILTIN, HIGH);
     updateTime();
-    // shiftArrayRight(tempArray, numberOfValuesInAvrege);
     tempHist = tempValue;
     firebaseUpload(DataType::temp);
     digitalWrite(LED_BUILTIN, LOW);
@@ -464,16 +437,11 @@ void tempLoop() {
 
 void loop()
 {
-  // currentMillis = millis();
   earthValue = readEarthSensor();
   humValue = getHum();
   tempValue = getTemp();
-  if (i == 10 || i == 0)
-  {
-    firebaseFetch();
-    i = 1;
-  }
-
+  
+  firebaseFetch();
   earthLoop();
   humLoop();
   tempLoop();
