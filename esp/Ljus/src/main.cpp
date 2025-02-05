@@ -21,6 +21,8 @@ int lightTurnOnAt = 0;
 int lightInteruptAt = 5;
 int lightValue = 0;
 
+int latestLightValue = 0;
+
 String isoDate = "";
 
 int i = 0;
@@ -85,7 +87,7 @@ void setup() {
 
 int getLightValue()
 {
-  int lightValue = map(constrain(analogRead(LightSensorPin), 0, 470), 0, 470, -1, 100);
+  int lightValue = map(constrain(analogRead(LightSensorPin), 0, 470), 0, 470, 1, 100);
   Serial.print("Light value: ");
   Serial.println(lightValue);
   return lightValue;
@@ -112,9 +114,9 @@ void turnLightOff()
   Firebase.setBool(firebaseData, "control/lights/isOn", lightIsOn);
 }
 
-bool triggerLightInterupt(const int latestLightValue, const int lightInteruptAt)
+bool triggerLightInterupt(const int newLightValue, const int latestLightValue , const int lightInteruptAt)
 {
-  if(latestLightValue <= lightInteruptAt)
+  if(abs(newLightValue - latestLightValue) >= lightInteruptAt)
   {
     return true;
   }
@@ -139,15 +141,39 @@ void updateTime()
 
 int firebaseUpload()
 {
+  Serial.println(lightValue);
   return Firebase.setInt(firebaseData, "sensor/light/" + isoDate + "/light", lightValue);
+}
+
+void light()
+{
+  if (lightManualOverride) {
+    if (manualOn) {
+      turnLightOn(lightValue);
+      return;
+    }
+    else {
+      turnLightOff();
+      return;
+    }
+  }
+  else if (lightValue <= lightTurnOnAt) {
+    turnLightOn(lightValue);
+    return;
+  }
+  else {
+    turnLightOff();
+    return;
+  }
 }
 
 void lightInterupt()
 {
-  if(triggerLightInterupt(getLightValue(), lightInteruptAt))
+  if(triggerLightInterupt(lightValue, latestLightValue , lightInteruptAt))
   {
     updateTime();
     firebaseUpload();
+    latestLightValue = lightValue;
   }
 }
 
@@ -159,8 +185,8 @@ void loop() {
     i = 1;
   }
 
-
-  turnLightOn(lightValue);
+  lightInterupt();
+  light();
   i++;
   delay(100);
 }
