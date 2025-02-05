@@ -60,6 +60,10 @@
       </q-carousel-slide>
     </q-carousel>
   </q-page>
+
+  <div class="">
+
+  </div>
 </template>
 
 <script setup>
@@ -68,6 +72,8 @@ import { useDatabaseObject } from 'vuefire'
 import { ref as dbRef, query, limitToLast } from 'firebase/database'
 import { db } from 'src/boot/vuefire'
 import ChartsComp from 'src/components/ChartsComp.vue'
+
+
 
 const slide = vueRef('temp') 
 

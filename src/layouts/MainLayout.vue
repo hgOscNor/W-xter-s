@@ -1,4 +1,8 @@
 <template>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+  />
   <q-layout view="lHh Lpr lFf">
     <q-header elevated class="bg-green text-white">
       <div class="q-pa-md">
@@ -6,20 +10,20 @@
           <q-route-tab
             to="/"
             name="home"
-            icon="img:https://www.hitachigymnasiet.se/wp-content/uploads/2023/09/logoMark.svg"
+            icon="img:src\assets\120px-Breezeicons-actions-22-office-chart-area-stacked.svg-3467501506.png"
             label="Hem"
             style="padding: 0px 20px; font-size: 12px"
           />
           <q-route-tab
             name="manual"
-            icon="alarm"
-            label="Manual"
+            icon="fa fa-cogs"
+            label="Kontroller"
             style="padding: 0px 20px; font-size: 12px"
             to="/manual"
           />
           <q-route-tab
             name="aboutUs"
-            icon="movie"
+            icon="fa-solid fa-circle-info"
             label="Om oss"
             style="padding: 0px 20px; font-size: 12px"
             to="/aboutUs"
