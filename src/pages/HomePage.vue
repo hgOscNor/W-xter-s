@@ -1,49 +1,75 @@
 <template>
-  <q-btn :to="'/Manual'">Manual</q-btn>
-  <ChartsComp
-    name="Temperatur"
-    lineColor="red"
-    :dataX="tempDataX"
-    :dataY="tempDataY"
-    :graphMin="0"
-    :graphMax="30"
-  ></ChartsComp>
-  <ChartsComp
-    name="Humidtiy"
-    lineColor="#fcba03"
-    :dataX="humDataX"
-    :dataY="humDataY"
-    :graphMin="0"
-    :graphMax="100"
-  ></ChartsComp>
-  <ChartsComp
-    name="Earth"
-    lineColor="green"
-    :dataX="earthDataX"
-    :dataY="earthDataY"
-    :graphMin="0"
-    :graphMax="100"
-  ></ChartsComp>
-  <ChartsComp
-    name="Light"
-    lineColor="blue"
-    :dataX="lightDataX"
-    :dataY="lightDataY"
-    :graphMin="0"
-    :graphMax="100"
-  ></ChartsComp>
+  <q-page class="bg-green-10 full-height" >
+    <q-carousel
+      v-model="slide"
+      swipeable
+      animated
+      control-color="primary"
+      navigation
+      padding
+      arrows
+      height="100%"
+      class="bg-green-10"
+    >
+      <q-carousel-slide name="temp" class="row flex-center full-width full-height">
+        <ChartsComp
+          name="Temperatur"
+          lineColor="red"
+          :dataX="tempDataX"
+          :dataY="tempDataY"
+          :graphMin="0"
+          :graphMax="30"
+          style="width: 85%; height: 100%"
+        />
+      </q-carousel-slide>
+
+      <q-carousel-slide name="humidity" class="row flex-center full-width full-height">
+       <ChartsComp
+         name="Humidity"
+         lineColor="blue"
+         :dataX="humDataX"
+         :dataY="humDataY"
+         :graphMin="0"
+         :graphMax="100"
+         style="width: 85%; height: 100%"
+       />
+      </q-carousel-slide>
+
+      <q-carousel-slide name="earth" class="row flex-center full-width full-height">
+        <ChartsComp
+          name="Earth"
+          lineColor="#6F4E37"
+          :dataX="earthDataX"
+          :dataY="earthDataY"
+          :graphMin="0"
+          :graphMax="100"
+          style="width: 85%; height: 100%"
+        />
+      </q-carousel-slide>
+
+      <q-carousel-slide name="light" class="row flex-center full-width full-height">
+        <ChartsComp
+          name="Light"
+          lineColor="white"
+          :dataX="lightDataX"
+          :dataY="lightDataY"
+          :graphMin="0"
+          :graphMax="100"
+          style="width: 85%; height: 100%"
+        />
+      </q-carousel-slide>
+    </q-carousel>
+  </q-page>
 </template>
+
 <script setup>
-import ChartsComp from 'src/components/ChartsComp.vue'
-
-//
-import { ref as vueRef /*onMounted,*/, watch } from 'vue'
-
-//Firebase
-// import {} from /*useRouter*/ 'vue-router'
+import { ref as vueRef, watch } from 'vue'
 import { useDatabaseObject } from 'vuefire'
 import { ref as dbRef, query, limitToLast } from 'firebase/database'
 import { db } from 'src/boot/vuefire'
+import ChartsComp from 'src/components/ChartsComp.vue'
+
+const slide = vueRef('temp') 
 
 const tempDataX = vueRef([])
 const tempDataY = vueRef([])
@@ -61,10 +87,11 @@ const lightDataX = vueRef([])
 const lightDataY = vueRef([])
 const lightData = useDatabaseObject(query(dbRef(db, 'sensor/light'), limitToLast(100)))
 
+// Uppdatera grafer när Firebase-data ändras
 watch(tempData, (newdata) => {
   if (newdata) {
     const timestamps = Object.keys(newdata).sort()
-    const values = timestamps.map((timestamp) => newdata[timestamp]?.C || newdata[timestamp]?.C)
+    const values = timestamps.map((timestamp) => newdata[timestamp]?.C)
     tempDataX.value = timestamps
     tempDataY.value = values
   }
@@ -72,9 +99,7 @@ watch(tempData, (newdata) => {
 watch(humData, (newdata) => {
   if (newdata) {
     const timestamps = Object.keys(newdata).sort()
-    const values = timestamps.map(
-      (timestamp) => newdata[timestamp]?.moist || newdata[timestamp]?.moist,
-    )
+    const values = timestamps.map((timestamp) => newdata[timestamp]?.moist)
     humDataX.value = timestamps
     humDataY.value = values
   }
@@ -82,9 +107,7 @@ watch(humData, (newdata) => {
 watch(earthData, (newdata) => {
   if (newdata) {
     const timestamps = Object.keys(newdata).sort()
-    const values = timestamps.map(
-      (timestamp) => newdata[timestamp]?.soil || newdata[timestamp]?.soil,
-    )
+    const values = timestamps.map((timestamp) => newdata[timestamp]?.soil)
     earthDataX.value = timestamps
     earthDataY.value = values
   }
@@ -92,9 +115,7 @@ watch(earthData, (newdata) => {
 watch(lightData, (newdata) => {
   if (newdata) {
     const timestamps = Object.keys(newdata).sort()
-    const values = timestamps.map(
-      (timestamp) => newdata[timestamp]?.light || newdata[timestamp]?.light,
-    )
+    const values = timestamps.map((timestamp) => newdata[timestamp]?.light)
     lightDataX.value = timestamps
     lightDataY.value = values
   }
