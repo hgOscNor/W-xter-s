@@ -2,7 +2,7 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated class="bg-green text-white">
       <div class="q-pa-md">
-        <q-tabs v-model="tab" class="text-white" align="center">
+        <q-tabs v-model="tab" class="text-white" align="center" style="height: 60px;">
           <q-tab
             name="Hem"
             icon="img:https://www.hitachigymnasiet.se/wp-content/uploads/2023/09/logoMark.svg"
@@ -38,7 +38,6 @@ const tab = vueRef()
 </script>
 
 <style>
-
 .q-layout {
   position: relative;
   overflow: hidden; 

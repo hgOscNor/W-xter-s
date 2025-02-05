@@ -42,14 +42,6 @@
     <!-- Checkboxar -->
     <div class="checkBox-section">
       <q-toggle
-        v-if="openValue !== null"
-        size="xl"
-        class="checkbox"
-        color="green-10"
-        v-model="openValue"
-        @update:model-value="logManualOpen"
-      />
-      <q-toggle
         size="xl"
         class="checkbox"
         color="green-10"
@@ -63,6 +55,14 @@
         v-model="manualOnValue"
         :disable="!manualOverrideValue"
         @update:model-value="logManualOn"
+      />
+      <q-toggle
+        v-if="openValue !== null"
+        size="xl"
+        class="checkbox"
+        color="green-10"
+        v-model="openValue"
+        @update:model-value="logManualOpen"
       />
     </div>
 </template>

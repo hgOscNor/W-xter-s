@@ -1,6 +1,6 @@
 <template>
   <div class="controlPanel">
-    <div class="fläktKontroller">
+    <div class="controllers">
       <ControllerComp
         name="Fläkt kontroller"
         :isOnValue="fanData?.isOn || false"
@@ -17,7 +17,7 @@
       ></ControllerComp>
     </div>
 
-    <div class="pumpKontroller">
+    <div class="controllers">
       <ControllerComp
         name="Pump kontroller"
         :isOnValue="pumpData?.isOn || false"
@@ -32,7 +32,22 @@
       ></ControllerComp>
     </div>
 
-    <div class="luckKontroller">
+    <div class="controllers">
+      <ControllerComp
+        name="Lamp kontroller"
+        :isOnValue="lightsData?.isOn || false"
+        :manualOverrideValue="lightsData?.manualOverride || false"
+        :inputValue="lightsData?.dimmer || 0"
+        :turnOnAtHumValue="lightsData?.turnOnAt || 0"
+        :manualOnValue="lightsData?.manualOn || false"
+        @updateManualOverride="logManualOverrideLights"
+        @updateManualSpeed="logDimmer"
+        @updateTurnOnAtTemp="logTurnOnAtLights"
+        @updateManualOn="logManualOnLights"
+      ></ControllerComp>
+    </div>
+
+    <div class="controllers">
       <ControllerComp
         name="Luck kontroller"
         :isOnValue="trapdoorData?.isOn || false"
@@ -47,21 +62,6 @@
         @updateTurnOnAtTemp="logTurnOnTempTrapdoor"
         @updateTurnOnAtHum="logTurnOnHumTrapdoor"
         @updateManualOn="logManualOnTrapdoor"
-      ></ControllerComp>
-    </div>
-
-    <div class="lampKontroller">
-      <ControllerComp
-        name="Lamp kontroller"
-        :isOnValue="lightsData?.isOn || false"
-        :manualOverrideValue="lightsData?.manualOverride || false"
-        :inputValue="lightsData?.dimmer || 0"
-        :turnOnAtHumValue="lightsData?.turnOnAt || 0"
-        :manualOnValue="lightsData?.manualOn || false"
-        @updateManualOverride="logManualOverrideLights"
-        @updateManualSpeed="logDimmer"
-        @updateTurnOnAtTemp="logTurnOnAtLights"
-        @updateManualOn="logManualOnLights"
       ></ControllerComp>
     </div>
   </div>
@@ -183,40 +183,10 @@ watch(data, (newData) => {
   padding: 2%;
 }
 
-.fläktKontroller {
-  width: 40%;
-  height: 500px;
-  padding: 25px;
-  border-radius: 40px;
-  border: 2px solid black;
-  text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  background-color: #4caf50;
-}
-.pumpKontroller {
-  width: 40%;
-  height: 500px;
-  padding: 25px;
-  border-radius: 40px;
-  border: 2px solid black;
-  text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  background-color: #4caf50;
-}
-.luckKontroller {
-  width: 40%;
-  height: 500px;
-  padding: 25px;
-  border-radius: 40px;
-  border: 2px solid black;
-  text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  background-color: #4caf50;
-}
-.lampKontroller {
-  width: 40%;
-  height: 500px;
-  padding: 25px;
+.controllers {
+  width: 24%;
+  height: 100%;
+  padding: 15px;
   border-radius: 40px;
   border: 2px solid black;
   text-align: center;
