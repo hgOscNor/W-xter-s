@@ -77,7 +77,7 @@ void firebaseFetch()
 {
   Firebase.getBool(firebaseData, "control/fan/manualOverride");
   fanManualOverride = firebaseData.boolData();
-  Firebase.getInt(firebaseData, "control/fan/manulSpeed");
+  Firebase.getInt(firebaseData, "control/fan/manualSpeed");
   fanManualSpeed = map(firebaseData.intData(), 0, 100, 200, 1024);
   Firebase.getInt(firebaseData, "control/fan/turnOnAtHum");
   fanTurnOnAtHum = firebaseData.intData();
