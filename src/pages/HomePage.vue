@@ -9,6 +9,7 @@
       padding
       arrows
       height="100%"
+      width="100%"
       class="bg-green-10"
     >
       <q-carousel-slide name="temp" class="row flex-center full-width full-height">
@@ -19,7 +20,7 @@
           :dataY="tempDataY"
           :graphMin="0"
           :graphMax="30"
-          style="width: 60%; height: 100%"
+          class="graphSize"
         />
       </q-carousel-slide>
 
@@ -31,7 +32,7 @@
           :dataY="humDataY"
           :graphMin="0"
           :graphMax="100"
-          style="width: 60%; height: 100%"
+          class="graphSize"
         />
       </q-carousel-slide>
 
@@ -43,7 +44,7 @@
           :dataY="earthDataY"
           :graphMin="0"
           :graphMax="100"
-          style="width: 60%; height: 100%"
+          class="graphSize"
         />
       </q-carousel-slide>
 
@@ -55,20 +56,19 @@
           :dataY="lightDataY"
           :graphMin="0"
           :graphMax="100"
-          style="width: 60%; height: 100%"
+          class="graphSize"
         />
       </q-carousel-slide>
     </q-carousel>
 
     <div class="latestValuesContainer">
-  <q-card v-for="(value, key) in latestValues" :key="key" class="latestValue">
-    <q-card-section>
-      <div class="text-h6">{{ key }}</div>
-      <div class="text-h4">{{ value }}</div>
-    </q-card-section>
-  </q-card>
-</div>
-
+      <q-card v-for="(value, key) in latestValues" :key="key" class="latestValue">
+        <q-card-section>
+          <div class="text-h6">{{ key }}</div>
+          <div class="text-h4">{{ value }}</div>
+        </q-card-section>
+      </q-card>
+    </div>
   </q-page>
 </template>
 
@@ -85,7 +85,7 @@ const latestValues = vueRef({
   Temperatur: '0°C',
   Luftfuktighet: '0%',
   Jordfuktighet: '0%',
-  Ljusnivå: '0%'
+  Ljusnivå: '0%',
 })
 
 const tempDataX = vueRef([])
@@ -146,18 +146,23 @@ watch(lightData, (newdata) => {
 .latestValuesContainer {
   display: flex;
   justify-content: center;
-  gap: 1.5%; 
+  gap: 1.5%;
   padding: 0.5%;
 }
 
 .latestValue {
-  flex: 1; 
-  max-width: 24%; 
+  flex: 1;
+  max-width: 24%;
   padding: 15px;
   border-radius: 40px;
   border: 2px solid black;
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   background-color: #4caf50;
+}
+
+.graphSize {
+  width: 100%;
+  height: 50vh;
 }
 </style>

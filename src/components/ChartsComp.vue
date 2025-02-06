@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="flex-grow: 1">
     <canvas ref="lineChart"></canvas>
   </div>
 </template>
@@ -75,6 +75,7 @@ onMounted(() => {
       ],
     },
     options: {
+      maintainAspectRatio: false,
       pointRadius: 0,
       animation: false,
       scales: {
