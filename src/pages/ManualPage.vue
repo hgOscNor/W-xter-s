@@ -1,11 +1,11 @@
-<template>
+<template> 
   <div class="controlPanel">
     <div class="controllers">
       <ControllerComp
         name="Fläkt kontroller"
         labelHead="Slå på vid:"
         labelTemp="°C"
-        labelHum="% Luftfuktighet"
+        labelHum="Fuktighet"
         labelMain="Hastighet"
         labelManOve="Manuell överskrivning"
         labelManOn="Manuell på"
@@ -27,7 +27,7 @@
       <ControllerComp
         name="Pump kontroller"
         labelHead="Pumpa vid:"
-        labelHum="% Jordfuktighet"
+        labelHum="Fuktighet"
         labelMain="Hastighet"
         labelManOve="Manuell överskrivning"
         labelManOn="Manuell på"
@@ -47,7 +47,7 @@
       <ControllerComp
         name="Lamp kontroller"
         labelHead="Tänd vid:"
-        labelHum="Ljusnivå"
+        labelHum="Ljus värde"
         labelMain="Ljusstyrka"
         labelManOve="Manuell överskrivning"
         labelManOn="Manuell på"
@@ -68,7 +68,7 @@
         name="Luck kontroller"
         labelHead="Öppna vid:"
         labelTemp="°C"
-        labelHum="% Luftfuktighet"
+        labelHum="Fuktighet"
         labelManOve="Manuell överskrivning"
         labelManOn="Manuell på"
         :isOnValue="trapdoorData?.isOn || false"
@@ -190,23 +190,23 @@ watch(data, (newData) => {
 
 <style>
 .controlPanel {
-  display: grid; 
-  grid-template-columns: repeat(2, 1fr); 
-  gap: 2%; 
-  padding: 2.5%;
-  justify-items: center; 
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.1%;
+  padding: 0.5%;
 }
 
 .controllers {
-  width: 90%; 
+  width: 24%;
   height: 100%;
-  padding: 4%;
+  padding: 0.8%;
   padding-top: 0%;
-  border-radius: 15px;
-  border: 2px solid #333;
+  border-radius: 40px;
+  border: 2px solid black;
   text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   background-color: #4caf50;
-  transition: background-color 0.3s ease;
 }
 </style>

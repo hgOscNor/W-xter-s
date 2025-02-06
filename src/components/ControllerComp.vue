@@ -1,89 +1,81 @@
 <template>
   <div class="inputDiv">
     <!-- Titel -->
-    <h3>{{ props.name }}</h3>
+    <h3 class="title">{{ props.name }}</h3>
 
-    <!--Numberboxar -->
+    <!-- Numberboxar -->
     <div class="numberBox-section">
-<<<<<<< HEAD
-      <label class="labelHead">{{ props.labelHead }}</label> 
-      <br/>
-      <input
-=======
-      <label>{{ props.labelHead }}</label
-      ><br />
-      <q-input
->>>>>>> 25aa695c0917e1b766d40757dd4a8d102ab359c2
-        v-if="turnOnAtTempValue !== null"
-        v-model.number="turnOnAtTempValue"
-        type="number"
-        min="1"
-        max="100"
-        filled
-        @update:model-value="logTempTurnOn"
-      />
-      <label class="labels">{{ props.labelTemp }}</label>
+      <label class="labelHead">{{ props.labelHead }}</label>
 
-      <q-input
-        v-if="turnOnAtHumValue !== null"
-        v-model.number="turnOnAtHumValue"
-        type="number"
-        min="1"
-        max="100"
-<<<<<<< HEAD
-        v-model="turnOnAtHumValue"
-      />
-      <label class="labels">{{ props.labelHum }}</label>
-=======
-        @update:model-value="logHumTurnOn"
-      ></q-input>
-      <label>{{ props.labelHum }}</label>
->>>>>>> 25aa695c0917e1b766d40757dd4a8d102ab359c2
+      <!-- Temperatur -->
+      <div v-if="turnOnAtTempValue !== null" class="number-box">
+        <q-input color="green-10"
+          v-model.number="turnOnAtTempValue"
+          type="number"
+          min="1"
+          max="100"
+          @update:model-value="logTempTurnOn"
+          label="Temperatur °C"
+        />
+      </div>
+
+      <!-- Luftfuktighet -->
+      <div v-if="turnOnAtHumValue !== null" class="number-box">
+        <q-input color="green-10"
+          v-model.number="turnOnAtHumValue"
+          type="number"
+          min="1"
+          max="100"
+          @update:model-value="logHumTurnOn"
+          label="Luftfuktighet %"
+        />
+      </div>
     </div>
 
     <!-- Sliders -->
-    <div class="slider-section"></div>
-    <label class="labels">{{ props.labelMain }}</label>
-    <br/>
-    <label class="labels">{{ inputValue }}</label>
-    <q-slider
-      v-if="inputValue !== null"
-      @change="logManualSpeed"
-      v-model.lazy.number="inputValue"
-      :min="1"
-      :max="100"
-      :step="1"
-      color="green-10"
-    />
-  </div>
+    <div class="slider-section">
+      <label class="labels">{{ props.labelMain }}</label>
+      <br/>
+      <label class="labels">{{ inputValue }}</label>
+      <q-slider
+        v-if="inputValue !== null"
+        @change="logManualSpeed"
+        v-model.lazy.number="inputValue"
+        :min="1"
+        :max="100"
+        :step="1"
+        color="green-10"
+      />
+    </div>
 
-  <!-- Checkboxar -->
-
-  <div class="checkBox-section">
-    <label class="labels">{{ props.labelManOve }}</label>
-    <q-toggle
-      size="xl"
-      class="checkbox"
-      color="green-10"
-      v-model="manualOverrideValue"
-      @update:model-value="logManualOverride"
-    />
-    <label class="labels">{{ props.labelManOn }}</label>
-    <q-toggle
-      size="xl"
-      class="checkbox"
-      color="green-10"
-      v-model="manualOnValue"
-      :disable="!manualOverrideValue"
-      @update:model-value="logManualOn"
-    />
+    <!-- Checkboxar -->
+    <div class="checkBox-section">
+      <label class="labels">{{ props.labelManOve }}</label>
+      <q-toggle
+        size="xl"
+        class="checkbox"
+        color="green-10"
+        v-model="manualOverrideValue"
+        @update:model-value="logManualOverride"
+      />
+      <br/>
+      <label class="labels">{{ props.labelManOn }}</label>
+      <q-toggle
+        size="xl"
+        class="checkbox"
+        color="green-10"
+        v-model="manualOnValue"
+        :disable="!manualOverrideValue"
+        @update:model-value="logManualOn"
+      />
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, watch } from 'vue'
 
-//Props
+// Props
 const props = defineProps({
   name: String,
   isOnValue: Boolean,
@@ -182,27 +174,41 @@ watch(inputValue, (val) => {
 </script>
 
 <style>
+.title{
+  margin: 6%;
+  padding: 0%;
+  font-size: 34px;
+  font-weight: bold;
+}
+
 .labels {
-  margin: 0;
-  padding: 0;
+  margin: 0%;
+  padding: 0%;
   font-size: 20px; 
 }
 
 .labelHead {
-  margin: 0;
-  padding: 0;
+  margin: 0%;
+  padding: 0%;
+  margin-top: 5%;
   font-size: 20px;
   font-weight: bold;
 }
 
+.numberBox-section {
+  margin-top: 10%;
+  display: flex;
+  flex-direction: column;
+}
 
-input[type='number'] {
-  background-color: #dedede;
-  margin: 5%;
-  padding: 5%;
-  border-radius: 2px;
-  border-style: solid;
-  size: 100%;
+.number-box {
+  margin-bottom: 0%;
+  flex: 1;
+  min-width: 20%;
+}
+
+.slider-section {
+  margin-top: 14%;
 }
 
 .checkbox {
