@@ -13,7 +13,7 @@
     >
       <q-carousel-slide name="temp" class="row flex-center full-width full-height">
         <ChartsComp
-          name="Temperatur °C"
+          name="Temperatur"
           lineColor="red"
           :dataX="tempDataX"
           :dataY="tempDataY"
@@ -25,7 +25,7 @@
 
       <q-carousel-slide name="humidity" class="row flex-center full-width full-height">
         <ChartsComp
-          name="Luftfuktighet %"
+          name="Luftfuktighet"
           lineColor="blue"
           :dataX="humDataX"
           :dataY="humDataY"
@@ -37,7 +37,7 @@
 
       <q-carousel-slide name="earth" class="row flex-center full-width full-height">
         <ChartsComp
-          name="Jordfuktighet %"
+          name="Jord"
           lineColor="#6F4E37"
           :dataX="earthDataX"
           :dataY="earthDataY"
@@ -49,7 +49,7 @@
 
       <q-carousel-slide name="light" class="row flex-center full-width full-height">
         <ChartsComp
-          name="Ljusnivå %"
+          name="Ljus"
           lineColor="white"
           :dataX="lightDataX"
           :dataY="lightDataY"
@@ -61,14 +61,13 @@
     </q-carousel>
 
     <div class="latestValuesContainer">
-  <q-card v-for="(value, key) in latestValues" :key="key" class="latestValue">
-    <q-card-section>
-      <div class="text-h6">{{ key }}</div>
-      <div class="text-h4">{{ value }}</div>
-    </q-card-section>
-  </q-card>
-</div>
-
+      <q-card v-for="(value, key) in latestValues" :key="key" class="latestValue">
+        <q-card-section>
+          <div class="text-h6">{{ key }}</div>
+          <div class="text-h4">{{ value }}</div>
+        </q-card-section>
+      </q-card>
+    </div>
   </q-page>
 </template>
 
@@ -85,7 +84,7 @@ const latestValues = vueRef({
   Temperatur: '0°C',
   Luftfuktighet: '0%',
   Jordfuktighet: '0%',
-  Ljusnivå: '0%'
+  Ljusnivå: '0%',
 })
 
 const tempDataX = vueRef([])
@@ -146,13 +145,13 @@ watch(lightData, (newdata) => {
 .latestValuesContainer {
   display: flex;
   justify-content: center;
-  gap: 1.5%; 
+  gap: 1.5%;
   padding: 0.5%;
 }
 
 .latestValue {
-  flex: 1; 
-  max-width: 24%; 
+  flex: 1;
+  max-width: 24%;
   padding: 15px;
   border-radius: 40px;
   border: 2px solid black;

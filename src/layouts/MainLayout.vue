@@ -10,7 +10,7 @@
           <q-route-tab
             to="/"
             name="home"
-            icon="img:src\assets\120px-Breezeicons-actions-22-office-chart-area-stacked.svg-3467501506.png"
+            icon="img:src\assets\image(1).png"
             label="Hem"
             style="padding: 0px 20px; font-size: 12px"
           />
