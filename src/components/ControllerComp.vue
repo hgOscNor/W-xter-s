@@ -27,7 +27,7 @@
           min="1"
           max="100"
           @update:model-value="logHumTurnOn"
-          label="Luftfuktighet %"
+          :label="labelHumCustom"
         />
       </div>
     </div>
@@ -93,11 +93,16 @@ const props = defineProps({
   manualOn: Boolean,
   labelTemp: String,
   labelHum: String,
+  labelHumCustom: { // <-- Ny prop!
+    type: String,
+    default: "Luftfuktighet %",
+  },
   labelMain: String,
   labelManOve: String,
   labelManOn: String,
   labelHead: String,
-})
+});
+
 
 watch(
   () => props.startupValInt,
