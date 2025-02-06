@@ -179,14 +179,13 @@ watch(data, (newData) => {
   align-items: flex-start;
   flex-wrap: wrap;
   gap: 0.1%;
-  row-gap: 40px;
-  padding: 2%;
+  padding: 0.5%;
 }
 
 .controllers {
   width: 24%;
   height: 100%;
-  padding: 15px;
+  padding: 0.8%;
   border-radius: 40px;
   border: 2px solid black;
   text-align: center;

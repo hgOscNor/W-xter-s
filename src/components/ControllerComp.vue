@@ -180,21 +180,4 @@ input[type='number'] {
   color: red;
   transition-duration: 0.2ms;
 }
-
-/*
-    .inputDiv {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 10%;  
-    } */
-/* .inputDiv {
-   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 10%; 
-} 
-*/
 </style>

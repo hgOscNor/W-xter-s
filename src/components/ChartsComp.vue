@@ -21,8 +21,6 @@ import {
 } from 'chart.js'
 import 'chartjs-adapter-date-fns'
 
-// Props
-
 const props = defineProps({
   name: String,
   lineColor: String,
@@ -89,11 +87,16 @@ onMounted(() => {
               day: 'MMM dd',
             },
           },
+          ticks: {
+            color: 'white', // Färg på X-axelns text
+          },
         },
-
         y: {
           suggestedMin: Number(props.graphMin),
           suggestedMax: Number(props.graphMax),
+          ticks: {
+            color: 'white', // Färg på Y-axelns text
+          },
         },
       },
       responsive: true,
@@ -102,6 +105,7 @@ onMounted(() => {
         title: {
           display: true,
           text: props.name,
+          color: 'white', // Färg på titeln
         },
         interaction: {
           mode: 'index',
