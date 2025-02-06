@@ -3,6 +3,12 @@
     <div class="controllers">
       <ControllerComp
         name="Fläkt kontroller"
+        labelHead="Slå på vid:"
+        labelTemp="°C"
+        labelHum="Fuktighet"
+        labelMain="Hastighet"
+        labelManOve="Manuell överskrivning"
+        labelManOn="Manuell på"
         :isOnValue="fanData?.isOn || false"
         :manualOverrideValue="fanData?.manualOverride || false"
         :inputValue="fanData?.manualSpeed || 0"
@@ -20,6 +26,11 @@
     <div class="controllers">
       <ControllerComp
         name="Pump kontroller"
+        labelHead="Slå på vid:"
+        labelHum="Fuktighet"
+        labelMain="Hastighet"
+        labelManOve="Manuell överskrivning"
+        labelManOn="Manuell på"
         :isOnValue="pumpData?.isOn || false"
         :manualOverrideValue="pumpData?.manualOverride || false"
         :inputValue="pumpData?.manualSpeed || 0"
@@ -35,6 +46,11 @@
     <div class="controllers">
       <ControllerComp
         name="Lamp kontroller"
+        labelHead="Slå på vid:"
+        labelHum="Ljus värde"
+        labelMain="Ljusstyrka"
+        labelManOve="Manuell överskrivning"
+        labelManOn="Manuell på"
         :isOnValue="lightsData?.isOn || false"
         :manualOverrideValue="lightsData?.manualOverride || false"
         :inputValue="lightsData?.dimmer || 0"
@@ -42,7 +58,7 @@
         :manualOnValue="lightsData?.manualOn || false"
         @updateManualOverride="logManualOverrideLights"
         @updateManualSpeed="logDimmer"
-        @updateTurnOnAtTemp="logTurnOnAtLights"
+        @updateTurnOnAtHum="logTurnOnAtLights"
         @updateManualOn="logManualOnLights"
       ></ControllerComp>
     </div>
@@ -50,6 +66,11 @@
     <div class="controllers">
       <ControllerComp
         name="Luck kontroller"
+        labelHead="Slå på vid:"
+        labelTemp="°C"
+        labelHum="Fuktighet"
+        labelManOve="Manuell överskrivning"
+        labelManOn="Manuell på"
         :isOnValue="trapdoorData?.isOn || false"
         :manualOverrideValue="trapdoorData?.manualOverride || false"
         :openValue="trapdoorData?.open || false"
@@ -58,7 +79,6 @@
         :manualOnValue="trapdoorData?.manualOn || false"
         :inputValue="null"
         @updateManualOverride="logManualOverrideTrapdoor"
-        @updateManualOpen="logManualOpenTrapdoor"
         @updateTurnOnAtTemp="logTurnOnTempTrapdoor"
         @updateTurnOnAtHum="logTurnOnHumTrapdoor"
         @updateManualOn="logManualOnTrapdoor"
@@ -88,7 +108,6 @@ const pumpTurnOnAtSoilRef = dbRef(db, 'control/pump/turnOnAtSoil')
 const pumpManualOnRef = dbRef(db, 'control/pump/manualOn')
 
 const trapdoorManualOverrideRef = dbRef(db, 'control/trapdoor/manualOverride')
-const trapdoorOpenRef = dbRef(db, 'control/trapdoor/open')
 const trapdoorTurnOnAtTempRef = dbRef(db, 'control/trapdoor/openAtTemp')
 const trapdoorTurnOnAtHumRef = dbRef(db, 'control/trapdoor/openAtHum')
 const trapdoorManualOnRef = dbRef(db, 'control/trapdoor/manualOn')
@@ -131,9 +150,6 @@ function logManualOnPump(data) {
 //    Trapdoor
 function logManualOverrideTrapdoor(data) {
   set(trapdoorManualOverrideRef, Boolean(data))
-}
-function logManualOpenTrapdoor(data) {
-  set(trapdoorOpenRef, Boolean(data))
 }
 function logTurnOnTempTrapdoor(data) {
   set(trapdoorTurnOnAtTempRef, Number(data))
@@ -192,5 +208,4 @@ watch(data, (newData) => {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   background-color: #4caf50;
 }
-
 </style>

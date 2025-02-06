@@ -2,17 +2,21 @@
   <div class="inputDiv">
     <!-- Titel -->
     <h3>{{ props.name }}</h3>
-    
+
     <!--Numberboxar -->
     <div class="numberBox-section">
+      <label>{{ props.labelHead }}</label
+      ><br />
       <input
         v-if="turnOnAtTempValue !== null"
         @update:model-value="logTempTurnOn"
         type="number"
-        min="1" 
+        min="1"
         max="100"
         v-model="turnOnAtTempValue"
       />
+      <label>{{ props.labelTemp }}</label>
+
       <input
         v-if="turnOnAtHumValue !== null"
         @update:model-value="logHumTurnOn"
@@ -21,52 +25,47 @@
         max="100"
         v-model="turnOnAtHumValue"
       />
+      <label>{{ props.labelHum }}</label>
     </div>
 
-    
     <h5>{{ inputValue }}</h5>
 
     <!-- Sliders -->
     <div class="slider-section"></div>
-      <q-slider
-        v-if="inputValue !== null"
-        @change="logManualSpeed"
-        v-model.lazy.number="inputValue"
-        :min="1"
-        :max="100"
-        :step="1"
-        color="green-10"
-      />
-    </div>
+    <label>{{ props.labelMain }}</label>
+    <q-slider
+      v-if="inputValue !== null"
+      @change="logManualSpeed"
+      v-model.lazy.number="inputValue"
+      :min="1"
+      :max="100"
+      :step="1"
+      color="green-10"
+    />
+  </div>
 
-    <!-- Checkboxar -->
-    <div class="checkBox-section">
-      <q-toggle
-        size="xl"
-        class="checkbox"
-        color="green-10"
-        v-model="manualOverrideValue"
-        @update:model-value="logManualOverride"
-      />
-      <q-toggle
-        size="xl"
-        class="checkbox"
-        color="green-10"
-        v-model="manualOnValue"
-        :disable="!manualOverrideValue"
-        @update:model-value="logManualOn"
-      />
-      <q-toggle
-        v-if="openValue !== null"
-        size="xl"
-        class="checkbox"
-        color="green-10"
-        v-model="openValue"
-        @update:model-value="logManualOpen"
-      />
-    </div>
+  <!-- Checkboxar -->
+
+  <div class="checkBox-section">
+    <label>{{ props.labelManOve }}</label>
+    <q-toggle
+      size="xl"
+      class="checkbox"
+      color="green-10"
+      v-model="manualOverrideValue"
+      @update:model-value="logManualOverride"
+    />
+    <label>{{ props.labelManOn }}</label>
+    <q-toggle
+      size="xl"
+      class="checkbox"
+      color="green-10"
+      v-model="manualOnValue"
+      :disable="!manualOverrideValue"
+      @update:model-value="logManualOn"
+    />
+  </div>
 </template>
-
 
 <script setup>
 import { ref, watch } from 'vue'
@@ -87,6 +86,12 @@ const props = defineProps({
     default: null,
   },
   manualOn: Boolean,
+  labelTemp: String,
+  labelHum: String,
+  labelMain: String,
+  labelManOve: String,
+  labelManOn: String,
+  labelHead: String,
 })
 
 watch(
@@ -139,9 +144,6 @@ function logHumTurnOn() {
 }
 function logManualOn() {
   emits('updateManualOn', manualOnValue.value)
-}
-function logManualOpen() {
-  emits('updateManualOpen', openValue.value)
 }
 
 watch(
