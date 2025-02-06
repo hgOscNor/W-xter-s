@@ -197,25 +197,7 @@ int readEarthSensor()
 
 bool triggerInterrupt(const int latestValue, const int hist, const int interuptAt)
 {
-  if (abs(latestValue - hist) >= interuptAt)
-  {
-    return true;
-  }
-  return false;
-}
-
-bool triggerHumInterupt(const int latestHumValue, const int humHist, const int interuptAt)
-{
-  if (abs(latestHumValue - humHist) >= interuptAt && latestHumValue != 200)
-  {
-    return true;
-  }
-  return false;
-}
-
-bool triggerTempInterupt(const int latestTempValue, const int tempHist, const int interuptAt)
-{
-  if (abs(latestTempValue - tempHist) >= interuptAt && latestTempValue != 200)
+  if (abs(latestValue - hist) >= interuptAt && latestValue != 200)
   {
     return true;
   }
