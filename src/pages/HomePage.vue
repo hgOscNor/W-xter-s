@@ -9,6 +9,7 @@
       padding
       arrows
       height="100%"
+      width="100%"
       class="bg-green-10"
     >
       <q-carousel-slide name="temp" class="row flex-center full-width full-height">
@@ -19,7 +20,7 @@
           :dataY="tempDataY"
           :graphMin="0"
           :graphMax="30"
-          style="width: 60%; height: 100%"
+          class="graphSize"
         />
       </q-carousel-slide>
 
@@ -31,7 +32,7 @@
           :dataY="humDataY"
           :graphMin="0"
           :graphMax="100"
-          style="width: 60%; height: 100%"
+          class="graphSize"
         />
       </q-carousel-slide>
 
@@ -43,7 +44,7 @@
           :dataY="earthDataY"
           :graphMin="0"
           :graphMax="100"
-          style="width: 60%; height: 100%"
+          class="graphSize"
         />
       </q-carousel-slide>
 
@@ -55,7 +56,7 @@
           :dataY="lightDataY"
           :graphMin="0"
           :graphMax="100"
-          style="width: 60%; height: 100%"
+          class="graphSize"
         />
       </q-carousel-slide>
     </q-carousel>
@@ -159,4 +160,12 @@ watch(lightData, (newdata) => {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   background-color: #4caf50;
 }
+<<<<<<< HEAD
+=======
+
+.graphSize {
+  width: 100%;
+  height: 50vh;
+}
+>>>>>>> 25aa695c0917e1b766d40757dd4a8d102ab359c2
 </style>

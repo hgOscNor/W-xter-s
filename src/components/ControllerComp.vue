@@ -7,24 +7,25 @@
     <div class="numberBox-section">
       <label>{{ props.labelHead }}</label
       ><br />
-      <input
+      <q-input
         v-if="turnOnAtTempValue !== null"
-        @update:model-value="logTempTurnOn"
+        v-model.number="turnOnAtTempValue"
         type="number"
         min="1"
         max="100"
-        v-model="turnOnAtTempValue"
+        filled
+        @update:model-value="logTempTurnOn"
       />
       <label>{{ props.labelTemp }}</label>
 
-      <input
+      <q-input
         v-if="turnOnAtHumValue !== null"
-        @update:model-value="logHumTurnOn"
+        v-model.number="turnOnAtHumValue"
         type="number"
         min="1"
         max="100"
-        v-model="turnOnAtHumValue"
-      />
+        @update:model-value="logHumTurnOn"
+      ></q-input>
       <label>{{ props.labelHum }}</label>
     </div>
 
