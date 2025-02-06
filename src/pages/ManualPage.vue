@@ -3,6 +3,12 @@
     <div class="controllers">
       <ControllerComp
         name="Fläkt kontroller"
+        labelHead="Slå på vid:"
+        labelTemp="°C"
+        labelHum="Fuktighet"
+        labelMain="Hastighet"
+        labelManOve="Manuell överskrivning"
+        labelManOn="Manuell på"
         :isOnValue="fanData?.isOn || false"
         :manualOverrideValue="fanData?.manualOverride || false"
         :inputValue="fanData?.manualSpeed || 0"
@@ -20,6 +26,11 @@
     <div class="controllers">
       <ControllerComp
         name="Pump kontroller"
+        labelHead="Slå på vid:"
+        labelHum="Fuktighet"
+        labelMain="Hastighet"
+        labelManOve="Manuell överskrivning"
+        labelManOn="Manuell på"
         :isOnValue="pumpData?.isOn || false"
         :manualOverrideValue="pumpData?.manualOverride || false"
         :inputValue="pumpData?.manualSpeed || 0"
@@ -35,6 +46,11 @@
     <div class="controllers">
       <ControllerComp
         name="Lamp kontroller"
+        labelHead="Slå på vid:"
+        labelHum="Ljus värde"
+        labelMain="Ljusstyrka"
+        labelManOve="Manuell överskrivning"
+        labelManOn="Manuell på"
         :isOnValue="lightsData?.isOn || false"
         :manualOverrideValue="lightsData?.manualOverride || false"
         :inputValue="lightsData?.dimmer || 0"
@@ -50,6 +66,11 @@
     <div class="controllers">
       <ControllerComp
         name="Luck kontroller"
+        labelHead="Slå på vid:"
+        labelTemp="°C"
+        labelHum="Fuktighet"
+        labelManOve="Manuell överskrivning"
+        labelManOn="Manuell på"
         :isOnValue="trapdoorData?.isOn || false"
         :manualOverrideValue="trapdoorData?.manualOverride || false"
         :openValue="trapdoorData?.open || false"

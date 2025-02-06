@@ -77,6 +77,8 @@ onMounted(() => {
       ],
     },
     options: {
+      pointRadius: 0,
+      animation: false,
       scales: {
         x: {
           type: 'time',
