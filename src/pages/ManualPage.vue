@@ -42,7 +42,7 @@
         :manualOnValue="lightsData?.manualOn || false"
         @updateManualOverride="logManualOverrideLights"
         @updateManualSpeed="logDimmer"
-        @updateTurnOnAtTemp="logTurnOnAtLights"
+        @updateTurnOnAtHum="logTurnOnAtLights"
         @updateManualOn="logManualOnLights"
       ></ControllerComp>
     </div>
@@ -58,7 +58,6 @@
         :manualOnValue="trapdoorData?.manualOn || false"
         :inputValue="null"
         @updateManualOverride="logManualOverrideTrapdoor"
-        @updateManualOpen="logManualOpenTrapdoor"
         @updateTurnOnAtTemp="logTurnOnTempTrapdoor"
         @updateTurnOnAtHum="logTurnOnHumTrapdoor"
         @updateManualOn="logManualOnTrapdoor"
@@ -88,7 +87,6 @@ const pumpTurnOnAtSoilRef = dbRef(db, 'control/pump/turnOnAtSoil')
 const pumpManualOnRef = dbRef(db, 'control/pump/manualOn')
 
 const trapdoorManualOverrideRef = dbRef(db, 'control/trapdoor/manualOverride')
-const trapdoorOpenRef = dbRef(db, 'control/trapdoor/open')
 const trapdoorTurnOnAtTempRef = dbRef(db, 'control/trapdoor/openAtTemp')
 const trapdoorTurnOnAtHumRef = dbRef(db, 'control/trapdoor/openAtHum')
 const trapdoorManualOnRef = dbRef(db, 'control/trapdoor/manualOn')
@@ -131,9 +129,6 @@ function logManualOnPump(data) {
 //    Trapdoor
 function logManualOverrideTrapdoor(data) {
   set(trapdoorManualOverrideRef, Boolean(data))
-}
-function logManualOpenTrapdoor(data) {
-  set(trapdoorOpenRef, Boolean(data))
 }
 function logTurnOnTempTrapdoor(data) {
   set(trapdoorTurnOnAtTempRef, Number(data))
@@ -193,5 +188,4 @@ watch(data, (newData) => {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   background-color: #4caf50;
 }
-
 </style>
