@@ -14,7 +14,7 @@
     >
       <q-carousel-slide name="temp" class="row flex-center full-width full-height">
         <ChartsComp
-          name="Temperatur °C"
+          name="Temperatur"
           lineColor="red"
           :dataX="tempDataX"
           :dataY="tempDataY"
@@ -26,7 +26,7 @@
 
       <q-carousel-slide name="humidity" class="row flex-center full-width full-height">
         <ChartsComp
-          name="Luftfuktighet %"
+          name="Luftfuktighet"
           lineColor="blue"
           :dataX="humDataX"
           :dataY="humDataY"
@@ -38,7 +38,7 @@
 
       <q-carousel-slide name="earth" class="row flex-center full-width full-height">
         <ChartsComp
-          name="Jordfuktighet %"
+          name="Jord"
           lineColor="#6F4E37"
           :dataX="earthDataX"
           :dataY="earthDataY"
@@ -50,7 +50,7 @@
 
       <q-carousel-slide name="light" class="row flex-center full-width full-height">
         <ChartsComp
-          name="Ljusnivå %"
+          name="Ljus"
           lineColor="white"
           :dataX="lightDataX"
           :dataY="lightDataY"
@@ -160,9 +160,12 @@ watch(lightData, (newdata) => {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   background-color: #4caf50;
 }
+<<<<<<< HEAD
+=======
 
 .graphSize {
   width: 100%;
   height: 50vh;
 }
+>>>>>>> 25aa695c0917e1b766d40757dd4a8d102ab359c2
 </style>
