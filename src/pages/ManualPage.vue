@@ -5,7 +5,7 @@
         name="Fläkt kontroller"
         labelHead="Slå på vid:"
         labelTemp="°C"
-        labelHum="Fuktighet"
+        labelHum="% Luftfuktighet"
         labelMain="Hastighet"
         labelManOve="Manuell överskrivning"
         labelManOn="Manuell på"
@@ -26,8 +26,8 @@
     <div class="controllers">
       <ControllerComp
         name="Pump kontroller"
-        labelHead="Slå på vid:"
-        labelHum="Fuktighet"
+        labelHead="Pumpa vid:"
+        labelHum="% Jordfuktighet"
         labelMain="Hastighet"
         labelManOve="Manuell överskrivning"
         labelManOn="Manuell på"
@@ -46,8 +46,8 @@
     <div class="controllers">
       <ControllerComp
         name="Lamp kontroller"
-        labelHead="Slå på vid:"
-        labelHum="Ljus värde"
+        labelHead="Tänd vid:"
+        labelHum="Ljusnivå"
         labelMain="Ljusstyrka"
         labelManOve="Manuell överskrivning"
         labelManOn="Manuell på"
@@ -66,9 +66,9 @@
     <div class="controllers">
       <ControllerComp
         name="Luck kontroller"
-        labelHead="Slå på vid:"
+        labelHead="Öppna vid:"
         labelTemp="°C"
-        labelHum="Fuktighet"
+        labelHum="% Luftfuktighet"
         labelManOve="Manuell överskrivning"
         labelManOn="Manuell på"
         :isOnValue="trapdoorData?.isOn || false"
@@ -190,22 +190,23 @@ watch(data, (newData) => {
 
 <style>
 .controlPanel {
-  display: flex;
-  justify-content: space-around;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 0.1%;
-  padding: 0.5%;
+  display: grid; 
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 2%; 
+  padding: 2.5%;
+  justify-items: center; 
 }
 
 .controllers {
-  width: 24%;
+  width: 90%; 
   height: 100%;
-  padding: 0.8%;
-  border-radius: 40px;
-  border: 2px solid black;
+  padding: 4%;
+  padding-top: 0%;
+  border-radius: 15px;
+  border: 2px solid #333;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   background-color: #4caf50;
+  transition: background-color 0.3s ease;
 }
 </style>

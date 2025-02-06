@@ -5,8 +5,8 @@
 
     <!--Numberboxar -->
     <div class="numberBox-section">
-      <label>{{ props.labelHead }}</label
-      ><br />
+      <label class="labelHead">{{ props.labelHead }}</label> 
+      <br/>
       <input
         v-if="turnOnAtTempValue !== null"
         @update:model-value="logTempTurnOn"
@@ -15,7 +15,7 @@
         max="100"
         v-model="turnOnAtTempValue"
       />
-      <label>{{ props.labelTemp }}</label>
+      <label class="labels">{{ props.labelTemp }}</label>
 
       <input
         v-if="turnOnAtHumValue !== null"
@@ -25,14 +25,14 @@
         max="100"
         v-model="turnOnAtHumValue"
       />
-      <label>{{ props.labelHum }}</label>
+      <label class="labels">{{ props.labelHum }}</label>
     </div>
-
-    <h5>{{ inputValue }}</h5>
 
     <!-- Sliders -->
     <div class="slider-section"></div>
-    <label>{{ props.labelMain }}</label>
+    <label class="labels">{{ props.labelMain }}</label>
+    <br/>
+    <label class="labels">{{ inputValue }}</label>
     <q-slider
       v-if="inputValue !== null"
       @change="logManualSpeed"
@@ -47,7 +47,7 @@
   <!-- Checkboxar -->
 
   <div class="checkBox-section">
-    <label>{{ props.labelManOve }}</label>
+    <label class="labels">{{ props.labelManOve }}</label>
     <q-toggle
       size="xl"
       class="checkbox"
@@ -55,7 +55,7 @@
       v-model="manualOverrideValue"
       @update:model-value="logManualOverride"
     />
-    <label>{{ props.labelManOn }}</label>
+    <label class="labels">{{ props.labelManOn }}</label>
     <q-toggle
       size="xl"
       class="checkbox"
@@ -169,6 +169,20 @@ watch(inputValue, (val) => {
 </script>
 
 <style>
+.labels {
+  margin: 0;
+  padding: 0;
+  font-size: 20px; 
+}
+
+.labelHead {
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+
 input[type='number'] {
   background-color: #dedede;
   margin: 5%;
