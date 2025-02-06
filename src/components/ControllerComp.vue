@@ -5,27 +5,40 @@
 
     <!--Numberboxar -->
     <div class="numberBox-section">
+<<<<<<< HEAD
       <label class="labelHead">{{ props.labelHead }}</label> 
       <br/>
       <input
+=======
+      <label>{{ props.labelHead }}</label
+      ><br />
+      <q-input
+>>>>>>> 25aa695c0917e1b766d40757dd4a8d102ab359c2
         v-if="turnOnAtTempValue !== null"
-        @update:model-value="logTempTurnOn"
+        v-model.number="turnOnAtTempValue"
         type="number"
         min="1"
         max="100"
-        v-model="turnOnAtTempValue"
+        filled
+        @update:model-value="logTempTurnOn"
       />
       <label class="labels">{{ props.labelTemp }}</label>
 
-      <input
+      <q-input
         v-if="turnOnAtHumValue !== null"
-        @update:model-value="logHumTurnOn"
+        v-model.number="turnOnAtHumValue"
         type="number"
         min="1"
         max="100"
+<<<<<<< HEAD
         v-model="turnOnAtHumValue"
       />
       <label class="labels">{{ props.labelHum }}</label>
+=======
+        @update:model-value="logHumTurnOn"
+      ></q-input>
+      <label>{{ props.labelHum }}</label>
+>>>>>>> 25aa695c0917e1b766d40757dd4a8d102ab359c2
     </div>
 
     <!-- Sliders -->
