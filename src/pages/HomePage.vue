@@ -4,7 +4,7 @@
       v-model="slide"
       swipeable
       animated
-      control-color="primary"
+      control-color="white"
       navigation
       padding
       arrows
@@ -14,7 +14,7 @@
     >
       <q-carousel-slide name="temp" class="row flex-center full-width full-height">
         <ChartsComp
-          name="Temperatur"
+          name="Temperatur °C"
           lineColor="red"
           :dataX="tempDataX"
           :dataY="tempDataY"
@@ -26,7 +26,7 @@
 
       <q-carousel-slide name="humidity" class="row flex-center full-width full-height">
         <ChartsComp
-          name="Luftfuktighet"
+          name="Luftfuktighet %"
           lineColor="blue"
           :dataX="humDataX"
           :dataY="humDataY"
@@ -38,7 +38,7 @@
 
       <q-carousel-slide name="earth" class="row flex-center full-width full-height">
         <ChartsComp
-          name="Jord"
+          name="Jordfuktighet %"
           lineColor="#6F4E37"
           :dataX="earthDataX"
           :dataY="earthDataY"
@@ -50,7 +50,7 @@
 
       <q-carousel-slide name="light" class="row flex-center full-width full-height">
         <ChartsComp
-          name="Ljus"
+          name="Ljusnivå %"
           lineColor="white"
           :dataX="lightDataX"
           :dataY="lightDataY"
