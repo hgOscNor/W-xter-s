@@ -88,6 +88,7 @@ const latestValues = vueRef({
   Ljusnivå: '0%',
 })
 
+// Graph data
 const tempDataX = vueRef([])
 const tempDataY = vueRef([])
 const tempData = useDatabaseObject(query(dbRef(db, 'sensor/air/temp'), limitToLast(100)))
@@ -104,7 +105,7 @@ const lightDataX = vueRef([])
 const lightDataY = vueRef([])
 const lightData = useDatabaseObject(query(dbRef(db, 'sensor/light'), limitToLast(100)))
 
-// Updates data when
+// Updates data when new data arrives
 watch(tempData, (newdata) => {
   if (newdata) {
     const timestamps = Object.keys(newdata).sort()

@@ -160,7 +160,7 @@ function logManualOn() {
   emits('updateManualOn', manualOnValue.value)
 }
 
-//
+// Sync variables
 watch(
   () => props,
   (newProps) => {

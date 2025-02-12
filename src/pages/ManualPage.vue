@@ -73,7 +73,6 @@
         labelHum="Fuktighet"
         labelManOve="Manuell överskrivning"
         labelManOn="Manuell på"
-        :isOnValue="trapdoorData?.isOn || false"
         :manualOverrideValue="trapdoorData?.manualOverride || false"
         :openValue="trapdoorData?.open || false"
         :turnOnAtHumValue="trapdoorData?.turnOnAtHum || 0"
@@ -182,13 +181,14 @@ function logManualOnLights(data) {
   set(refs.lights.manualOn, Boolean(data))
 }
 
+// Get Firebase data
 const data = useDatabaseObject(dbRef(db, 'control'))
 const fanData = vueRef()
 const pumpData = vueRef()
 const trapdoorData = vueRef()
 const lightsData = vueRef()
 
-// Replaces old data with the new data
+//    Replaces old data with the new data
 watch(data, (newData) => {
   if (newData?.fan) fanData.value = { ...newData.fan }
   if (newData?.pump) pumpData.value = { ...newData.pump }
