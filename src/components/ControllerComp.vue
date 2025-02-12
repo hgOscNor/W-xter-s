@@ -9,7 +9,8 @@
 
       <!-- Temperatur -->
       <div v-if="turnOnAtTempValue !== null" class="number-box">
-        <q-input color="green-10"
+        <q-input
+          color="green-10"
           v-model.number="turnOnAtTempValue"
           type="number"
           min="1"
@@ -21,7 +22,8 @@
 
       <!-- Luftfuktighet -->
       <div v-if="turnOnAtHumValue !== null" class="number-box">
-        <q-input color="green-10"
+        <q-input
+          color="green-10"
           v-model.number="turnOnAtHumValue"
           type="number"
           min="1"
@@ -35,7 +37,7 @@
     <!-- Sliders -->
     <div class="slider-section">
       <label class="labels">{{ props.labelMain }}</label>
-      <br/>
+      <br />
       <label class="labels">{{ inputValue }}</label>
       <q-slider
         v-if="inputValue !== null"
@@ -58,7 +60,7 @@
         v-model="manualOverrideValue"
         @update:model-value="logManualOverride"
       />
-      <br/>
+      <br />
       <label class="labels">{{ props.labelManOn }}</label>
       <q-toggle
         size="xl"
@@ -93,17 +95,17 @@ const props = defineProps({
   manualOn: Boolean,
   labelTemp: String,
   labelHum: String,
-  labelHumCustom: { // <-- Ny prop!
+  labelHumCustom: {
     type: String,
-    default: "Luftfuktighet %",
+    default: 'Luftfuktighet %',
   },
   labelMain: String,
   labelManOve: String,
   labelManOn: String,
   labelHead: String,
-});
+})
 
-
+// Kontrollerar om det finns nya värden och updater gamla vid behov
 watch(
   () => props.startupValInt,
   (newValue) => {
@@ -131,6 +133,7 @@ const turnOnAtTempValue = ref(props.turnOnAtTempValue)
 const openValue = ref(props.openValue)
 const manualOnValue = ref(props.manualOn)
 
+// Emits
 const emits = defineEmits([
   'updateManualOverride',
   'updateManualSpeed',
@@ -140,6 +143,7 @@ const emits = defineEmits([
   'updateManualOpen',
 ])
 
+// Send data when they are updated
 function logManualSpeed() {
   emits('updateManualSpeed', inputValue.value)
 }
@@ -156,6 +160,7 @@ function logManualOn() {
   emits('updateManualOn', manualOnValue.value)
 }
 
+//
 watch(
   () => props,
   (newProps) => {
@@ -168,18 +173,10 @@ watch(
   },
   { deep: true },
 )
-
-watch(inputValue, (val) => {
-  if (val < 0 || val === isNaN() || val === undefined) {
-    inputValue.value = 0
-  } else if (val > 100) {
-    inputValue.value = 100
-  }
-})
 </script>
 
 <style>
-.title{
+.title {
   margin: 6%;
   padding: 0%;
   font-size: 34px;
@@ -189,7 +186,7 @@ watch(inputValue, (val) => {
 .labels {
   margin: 0%;
   padding: 0%;
-  font-size: 20px; 
+  font-size: 20px;
 }
 
 .labelHead {

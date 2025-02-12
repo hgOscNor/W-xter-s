@@ -104,6 +104,7 @@ const lightDataX = vueRef([])
 const lightDataY = vueRef([])
 const lightData = useDatabaseObject(query(dbRef(db, 'sensor/light'), limitToLast(100)))
 
+// Updates data when
 watch(tempData, (newdata) => {
   if (newdata) {
     const timestamps = Object.keys(newdata).sort()

@@ -1,4 +1,4 @@
-<template> 
+<template>
   <div class="controlPanel">
     <div class="controllers">
       <ControllerComp
@@ -182,6 +182,7 @@ const pumpData = vueRef()
 const trapdoorData = vueRef()
 const lightsData = vueRef()
 
+// Replaces old data with the new data
 watch(data, (newData) => {
   if (newData?.fan) fanData.value = { ...newData.fan }
   if (newData?.pump) pumpData.value = { ...newData.pump }

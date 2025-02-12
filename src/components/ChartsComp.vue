@@ -21,6 +21,7 @@ import {
 } from 'chart.js'
 import 'chartjs-adapter-date-fns'
 
+// Props
 const props = defineProps({
   name: String,
   lineColor: String,
@@ -34,7 +35,7 @@ const props = defineProps({
   graphMax: Number,
 })
 
-// Registrera moduler
+// Register modules
 Chart.register(
   LineController,
   LineElement,
@@ -52,13 +53,15 @@ const lineChart = ref(null)
 let chartInstance = null
 
 onMounted(() => {
+  // Reset graph
   if (chartInstance) {
     chartInstance.destroy()
   }
-  console.log(props.dataX)
 
+  // Configure graph settings
   chartInstance = new Chart(lineChart.value, {
     type: 'line',
+    // Set time on X-axis
     data: {
       labels: props.dataX.map((dateStr) => {
         const date = new Date(dateStr)
@@ -81,6 +84,7 @@ onMounted(() => {
       scales: {
         x: {
           type: 'time',
+          // Configure time format
           time: {
             unit: 'minute',
             tooltipFormat: 'yyyy-MM-dd HH:mm:',
@@ -91,14 +95,15 @@ onMounted(() => {
             },
           },
           ticks: {
-            color: 'white', // Färg på X-axelns text
+            color: 'white', // Color of X-axis text
           },
         },
         y: {
+          // Set min / max on Y axis
           suggestedMin: Number(props.graphMin),
           suggestedMax: Number(props.graphMax),
           ticks: {
-            color: 'white', // Färg på Y-axelns text
+            color: 'white', // Color of X-axis text
           },
         },
       },
@@ -124,8 +129,10 @@ onMounted(() => {
   })
 })
 
+// Updates graph when new data arrives
 watch([() => props.dataX, () => props.dataY], () => {
   if (chartInstance) {
+    // Update time
     chartInstance.data.labels = props.dataX.map((dateStr) => {
       const date = new Date(dateStr)
       date.setHours(date.getHours() - 1)
