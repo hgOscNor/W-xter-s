@@ -1,4 +1,4 @@
-<template> 
+<template>
   <div class="controlPanel">
     <div class="controllers">
       <ControllerComp
@@ -97,83 +97,89 @@ import { ref as dbRef, set } from 'firebase/database'
 import { db } from 'src/boot/vuefire'
 
 // Firebase
-//    Ref
-const fanManualOverrideRef = dbRef(db, 'control/fan/manualOverride')
-const fanSpeedRef = dbRef(db, 'control/fan/manualSpeed')
-const fanTurnOnAtTempRef = dbRef(db, 'control/fan/turnOnAtTemp')
-const fanTurnOnAtHumRef = dbRef(db, 'control/fan/turnOnAtHum')
-const fanManualOnRef = dbRef(db, 'control/fan/manualOn')
-
-const pumpManualOverrideRef = dbRef(db, 'control/pump/manualOverride')
-const pumpSpeedRef = dbRef(db, 'control/pump/manualSpeed')
-const pumpTurnOnAtSoilRef = dbRef(db, 'control/pump/turnOnAtSoil')
-const pumpManualOnRef = dbRef(db, 'control/pump/manualOn')
-
-const trapdoorManualOverrideRef = dbRef(db, 'control/trapdoor/manualOverride')
-const trapdoorTurnOnAtTempRef = dbRef(db, 'control/trapdoor/openAtTemp')
-const trapdoorTurnOnAtHumRef = dbRef(db, 'control/trapdoor/openAtHum')
-const trapdoorManualOnRef = dbRef(db, 'control/trapdoor/manualOn')
-
-const lightsManualOverrdideRef = dbRef(db, 'control/lights/manualOverride')
-const lightsDimmerRef = dbRef(db, 'control/lights/dimmer')
-const lightsTurnOnAtRef = dbRef(db, 'control/lights/turnOnAt')
-const lightsManualOnRef = dbRef(db, 'control/lights/manualOn')
+const refs = {
+  fan: {
+    manualOverride: dbRef(db, 'control/fan/manualOverride'),
+    manualSpeed: dbRef(db, 'control/fan/manualSpeed'),
+    turnOnAtTemp: dbRef(db, 'control/fan/turnOnAtTemp'),
+    turnOnAtHum: dbRef(db, 'control/fan/turnOnAtHum'),
+    manualOn: dbRef(db, 'control/fan/manualOn'),
+  },
+  pump: {
+    manualOverride: dbRef(db, 'control/pump/manualOverride'),
+    manualSpeed: dbRef(db, 'control/pump/manualSpeed'),
+    turnOnAtSoil: dbRef(db, 'control/pump/turnOnAtSoil'),
+    manualOn: dbRef(db, 'control/pump/manualOn'),
+  },
+  trapdoor: {
+    manualOverride: dbRef(db, 'control/trapdoor/manualOverride'),
+    turnOnAtTemp: dbRef(db, 'control/trapdoor/openAtTemp'),
+    turnOnAtHum: dbRef(db, 'control/trapdoor/openAtHum'),
+    manualOn: dbRef(db, 'control/trapdoor/manualOn'),
+  },
+  lights: {
+    manualOverride: dbRef(db, 'control/lights/manualOverride'),
+    dimmer: dbRef(db, 'control/lights/dimmer'),
+    turnOnAt: dbRef(db, 'control/lights/turnOnAt'),
+    manualOn: dbRef(db, 'control/lights/manualOn'),
+  },
+}
 
 //  Write to firebase
 //    Fan
 function logManualOverrideFan(data) {
-  set(fanManualOverrideRef, Boolean(data))
+  set(refs.fan.manualOverride, Boolean(data))
 }
 function logManualSpeedFan(data) {
-  set(fanSpeedRef, Number(data))
+  set(refs.fan.manualSpeed, Number(data))
 }
 function logTurnOnTempFan(data) {
-  set(fanTurnOnAtTempRef, Number(data))
+  set(refs.fan.turnOnAtTemp, Number(data))
 }
 function logTurnOnHumFan(data) {
-  set(fanTurnOnAtHumRef, Number(data))
+  set(refs.fan.turnOnAtHum, Number(data))
 }
 function logManualOnFan(data) {
-  set(fanManualOnRef, Boolean(data))
+  set(refs.fan.manualOn, Boolean(data))
 }
 //    Pump
 function logManualOverridePump(data) {
-  set(pumpManualOverrideRef, Boolean(data))
+  set(refs.pump.manualOverride, Boolean(data))
 }
 function logManualSpeedPump(data) {
-  set(pumpSpeedRef, Number(data))
+  set(refs.pump.manualSpeed, Number(data))
 }
 function logTurnOnSoilPump(data) {
-  set(pumpTurnOnAtSoilRef, Number(data))
+  set(refs.pump.turnOnAtSoil, Number(data))
 }
 function logManualOnPump(data) {
-  set(pumpManualOnRef, Boolean(data))
+  set(refs.pump.manualOn, Boolean(data))
 }
 //    Trapdoor
 function logManualOverrideTrapdoor(data) {
-  set(trapdoorManualOverrideRef, Boolean(data))
+  set(refs.trapdoor.manualOverride, Boolean(data))
 }
 function logTurnOnTempTrapdoor(data) {
-  set(trapdoorTurnOnAtTempRef, Number(data))
+  set(refs.trapdoor.turnOnAtTemp, Number(data))
 }
 function logTurnOnHumTrapdoor(data) {
-  set(trapdoorTurnOnAtHumRef, Number(data))
+  set(refs.trapdoor.turnOnAtHum, Number(data))
 }
 function logManualOnTrapdoor(data) {
-  set(trapdoorManualOnRef, Boolean(data))
+  set(refs.trapdoor.manualOn, Boolean(data))
 }
 //  Lights
 function logManualOverrideLights(data) {
-  set(lightsManualOverrdideRef, Boolean(data))
+  set(refs.lights.manualOverride, Boolean(data))
 }
 function logDimmer(data) {
-  set(lightsDimmerRef, Number(data))
+  set(refs.lights.dimmer, Number(data))
 }
 function logTurnOnAtLights(data) {
-  set(lightsTurnOnAtRef, Number(data))
+  set(refs.lights.turnOnAt, Number(data))
 }
 function logManualOnLights(data) {
-  set(lightsManualOnRef, Boolean(data))
+  set(refs.lights.manualOn, Boolean(data))
 }
 
 const data = useDatabaseObject(dbRef(db, 'control'))
